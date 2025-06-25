@@ -1,73 +1,52 @@
-# Makefile for Social Network Graph Project
-# File structure: include/graph.h, src/*.c, src/*.txt
-
-# Compiler and flags
+# Makefile for Graph Traversal Project
 CC = gcc
 CFLAGS = -Wall -std=c99
-INCLUDEDIR = include
 SRCDIR = src
+INCDIR = include
+OBJDIR = obj
 
-# Source files
-MAIN_SOURCES = $(SRCDIR)/main.c $(SRCDIR)/graph.c
-BONUS_SOURCES = $(SRCDIR)/01-BONUS.c $(SRCDIR)/graph.c
+# Create obj directory if it doesn't exist
+$(shell mkdir -p $(OBJDIR))
 
-# Executable names
-MAIN_EXEC = $(SRCDIR)/main
-BONUS_EXEC = $(SRCDIR)/bonus
+# Main program
+main: $(OBJDIR)/main
+	@echo "Main program compiled successfully in $(OBJDIR)/"
 
-# Default target
-all: $(MAIN_EXEC)
+$(OBJDIR)/main: $(SRCDIR)/main.c $(SRCDIR)/graph.c
+	$(CC) $(CFLAGS) -I$(INCDIR) $(SRCDIR)/main.c $(SRCDIR)/graph.c -o $(OBJDIR)/main
 
-# Build main program
-$(MAIN_EXEC): $(MAIN_SOURCES)
-	$(CC) $(CFLAGS) -I$(INCLUDEDIR) $(MAIN_SOURCES) -o $(MAIN_EXEC)
+# Bonus program - compiles and runs automatically
+bonus: $(OBJDIR)/bonus
+	@echo "Bonus program compiled successfully in $(OBJDIR)/"
+	@echo "Running bonus program from src/ directory..."
+	@cd $(SRCDIR) && ../$(OBJDIR)/bonus
 
-# Build bonus program
-bonus: $(BONUS_EXEC)
+$(OBJDIR)/bonus: $(SRCDIR)/01-BONUS.c $(SRCDIR)/graph.c
+	$(CC) $(CFLAGS) -I$(INCDIR) $(SRCDIR)/01-BONUS.c $(SRCDIR)/graph.c -o $(OBJDIR)/bonus
 
-$(BONUS_EXEC): $(BONUS_SOURCES)
-	$(CC) $(CFLAGS) -I$(INCLUDEDIR) $(BONUS_SOURCES) -o $(BONUS_EXEC)
+# Clean target
+clean:
+	rm -rf $(OBJDIR)
+	@echo "Cleaned all executables from $(OBJDIR)/"
 
 # Run main program
-run: $(MAIN_EXEC)
-	cd $(SRCDIR) && ./main
+run: $(OBJDIR)/main
+	@echo "Running main program from src/ directory..."
+	@cd $(SRCDIR) && ../$(OBJDIR)/main
 
 # Run bonus program
-run-bonus: $(BONUS_EXEC)
-	cd $(SRCDIR) && ./bonus
-
-# Clean compiled files and output files
-clean:
-	rm -f $(MAIN_EXEC) $(BONUS_EXEC)
-	rm -f $(SRCDIR)/*.exe
-	rm -f $(SRCDIR)/*-SET.TXT
-	rm -f $(SRCDIR)/*-DEGREE.TXT
-	rm -f $(SRCDIR)/*-LIST.TXT
-	rm -f $(SRCDIR)/*-MATRIX.TXT
-	rm -f $(SRCDIR)/*-BFS.TXT
-	rm -f $(SRCDIR)/*-DFS.TXT
-	rm -f $(SRCDIR)/*-SUBGRAPH.TXT
-
-# Clean only output files (keep executables)
-clean-output:
-	rm -f $(SRCDIR)/*-SET.TXT
-	rm -f $(SRCDIR)/*-DEGREE.TXT
-	rm -f $(SRCDIR)/*-LIST.TXT
-	rm -f $(SRCDIR)/*-MATRIX.TXT
-	rm -f $(SRCDIR)/*-BFS.TXT
-	rm -f $(SRCDIR)/*-DFS.TXT
-	rm -f $(SRCDIR)/*-SUBGRAPH.TXT
+run-bonus: $(OBJDIR)/bonus
+	@echo "Running bonus program from src/ directory..."
+	@cd $(SRCDIR) && ../$(OBJDIR)/bonus
 
 # Help target
 help:
 	@echo "Available targets:"
-	@echo "  all        - Build main program (default)"
-	@echo "  bonus      - Build bonus program"
-	@echo "  run        - Build and run main program"
-	@echo "  run-bonus  - Build and run bonus program"
-	@echo "  clean      - Remove all compiled files and output files"
-	@echo "  clean-output - Remove only output files"
-	@echo "  help       - Show this help message"
+	@echo "  main      - Compile main program to $(OBJDIR)/main"
+	@echo "  bonus     - Compile and automatically run bonus program"
+	@echo "  run       - Run the main program"
+	@echo "  run-bonus - Run the bonus program"
+	@echo "  clean     - Remove all executables from $(OBJDIR)/"
+	@echo "  help      - Show this help message"
 
-# Declare phony targets
-.PHONY: all bonus run run-bonus clean clean-output help
+.PHONY: main bonus clean run run-bonus help
