@@ -27,7 +27,16 @@ $(OBJDIR)/bonus: $(SRCDIR)/01-BONUS.c $(SRCDIR)/graph.c
 # Clean target
 clean:
 	rm -rf $(OBJDIR)
+	rm -f $(SRCDIR)/*-SET.TXT
+	rm -f $(SRCDIR)/*-DEGREE.TXT
+	rm -f $(SRCDIR)/*-LIST.TXT
+	rm -f $(SRCDIR)/*-MATRIX.TXT
+	rm -f $(SRCDIR)/*-BFS.TXT
+	rm -f $(SRCDIR)/*-DFS.TXT
+	rm -f $(SRCDIR)/*-SUBGRAPH.TXT
 	@echo "Cleaned all executables from $(OBJDIR)/"
+	@echo "Cleaned all generated output files from $(SRCDIR)/"
+
 
 # Run main program
 run: $(OBJDIR)/main
