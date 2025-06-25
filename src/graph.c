@@ -1,77 +1,74 @@
-/* graph.c */
-#include "graph.h"
+#include <graph.h>
 
 int readInputFile(String10 strInputFileName, graphType* pGraph)
 {
     FILE* pFile;
     int i, j;
-    char strLine[256];
-    char* pToken;
+    String10 strToken;
+    int nSuccess;
     
-    pFile = fopen(strInputFileName, "r");
-    if (pFile == NULL) {
-        return 0; /* File not found */
-    }
+    nSuccess = 0;
     
-    /* Read number of vertices */
-    fscanf(pFile, "%d", &pGraph->nVertices);
-    
-    /* Initialize adjacency matrix and lists */
-    for (i = 0; i < MAX_VERTICES; i++) {
-        pGraph->adjCount[i] = 0;
-        for (j = 0; j < MAX_VERTICES; j++) {
-            pGraph->adjMatrix[i][j] = 0;
-        }
-    }
-    
-    /* Clear the newline after the number */
-    fgets(strLine, sizeof(strLine), pFile);
-    
-    /* Read adjacency information */
-    for (i = 0; i < pGraph->nVertices; i++) {
-        fgets(strLine, sizeof(strLine), pFile);
+    if ((pFile = fopen(strInputFileName, "r")) != NULL) {
+        /* Read number of vertices */
+        fscanf(pFile, "%d", &pGraph->nVertices);
         
-        /* Get the first token (vertex name) */
-        pToken = strtok(strLine, " \t\n");
-        if (pToken != NULL) {
-            strcpy(pGraph->vertices[i], pToken);
-            
-            /* Store adjacent vertices in input order */
+        /* Initialize adjacency matrix and lists */
+        for (i = 0; i < MAX_VERTICES; i++) {
             pGraph->adjCount[i] = 0;
-            pToken = strtok(NULL, " \t\n");
-            while (pToken != NULL && strcmp(pToken, "-1") != 0) {
-                strcpy(pGraph->adjList[i][pGraph->adjCount[i]], pToken);
+            for (j = 0; j < MAX_VERTICES; j++) {
+                pGraph->adjMatrix[i][j] = 0;
+            }
+        }
+        
+        /* Read adjacency information */
+        for (i = 0; i < pGraph->nVertices; i++) {
+            /* Read vertex name */
+            fscanf(pFile, "%s", pGraph->vertices[i]);
+            
+            /* Read adjacent vertices until -1 */
+            pGraph->adjCount[i] = 0;
+            fscanf(pFile, "%s", strToken);
+            while (strcmp(strToken, "-1") != 0) {
+                strcpy(pGraph->adjList[i][pGraph->adjCount[i]], strToken);
                 pGraph->adjCount[i]++;
-                pToken = strtok(NULL, " \t\n");
+                fscanf(pFile, "%s", strToken);
             }
         }
-    }
-    
-    /* Now build adjacency matrix */
-    for (i = 0; i < pGraph->nVertices; i++) {
-        for (j = 0; j < pGraph->adjCount[i]; j++) {
-            int nAdjIndex = findVertexIndex(pGraph, pGraph->adjList[i][j]);
-            if (nAdjIndex != -1) {
-                pGraph->adjMatrix[i][nAdjIndex] = 1;
-                pGraph->adjMatrix[nAdjIndex][i] = 1; /* Undirected graph */
+        
+        /* Now build adjacency matrix */
+        for (i = 0; i < pGraph->nVertices; i++) {
+            for (j = 0; j < pGraph->adjCount[i]; j++) {
+                int nAdjIndex = findVertexIndex(pGraph, pGraph->adjList[i][j]);
+                if (nAdjIndex != -1) {
+                    pGraph->adjMatrix[i][nAdjIndex] = 1;
+                    pGraph->adjMatrix[nAdjIndex][i] = 1; /* Undirected graph */
+                }
             }
         }
+        
+        fclose(pFile);
+        nSuccess = 1;
     }
     
-    fclose(pFile);
-    return 1; /* Success */
+    return nSuccess;
 }
 
 int findVertexIndex(graphType* pGraph, String10 strVertex)
 {
     int i;
+    int nFoundIndex;
+    
+    nFoundIndex = -1;
     
     for (i = 0; i < pGraph->nVertices; i++) {
         if (strcmp(pGraph->vertices[i], strVertex) == 0) {
-            return i;
+            nFoundIndex = i;
+            i = pGraph->nVertices; /* Exit loop naturally */
         }
     }
-    return -1; /* Not found */
+    
+    return nFoundIndex;
 }
 
 int createOutputFileName(String10 strInputFileName, char* strSuffix, String50 strOutputFileName)
@@ -85,7 +82,7 @@ int createOutputFileName(String10 strInputFileName, char* strSuffix, String50 st
     for (i = 0; i < strlen(strOutputFileName); i++) {
         if (strOutputFileName[i] == '.') {
             strOutputFileName[i] = '\0';
-            break;
+            i = strlen(strOutputFileName); /* Exit loop naturally */
         }
     }
     
@@ -131,44 +128,46 @@ int produceOutputFile1(String10 strOutputFileName, graphType* pGraph)
     int nSortedIndices[MAX_VERTICES];
     int i, j;
     int nEdgeCount;
+    int nSuccess;
     
+    nSuccess = 0;
     createOutputFileName(strOutputFileName, "-SET", strFileName);
-    pFile = fopen(strFileName, "w");
-    if (pFile == NULL) {
-        return 0;
-    }
     
-    /* Sort vertices alphabetically */
-    sortVerticesAlphabetically(pGraph, nSortedIndices);
-    
-    /* Write V(G) */
-    fprintf(pFile, "V(G)={");
-    for (i = 0; i < pGraph->nVertices; i++) {
-        fprintf(pFile, "%s", pGraph->vertices[nSortedIndices[i]]);
-        if (i < pGraph->nVertices - 1) {
-            fprintf(pFile, ",");
-        }
-    }
-    fprintf(pFile, "}\n");
-    
-    /* Write E(G) */
-    fprintf(pFile, "E(G)={");
-    nEdgeCount = 0;
-    for (i = 0; i < pGraph->nVertices; i++) {
-        for (j = i + 1; j < pGraph->nVertices; j++) {
-            if (pGraph->adjMatrix[nSortedIndices[i]][nSortedIndices[j]] == 1) {
-                if (nEdgeCount > 0) {
-                    fprintf(pFile, ",");
-                }
-                fprintf(pFile, "(%s,%s)", pGraph->vertices[nSortedIndices[i]], pGraph->vertices[nSortedIndices[j]]);
-                nEdgeCount++;
+    if ((pFile = fopen(strFileName, "w")) != NULL) {
+        /* Sort vertices alphabetically */
+        sortVerticesAlphabetically(pGraph, nSortedIndices);
+        
+        /* Write V(G) */
+        fprintf(pFile, "V(G)={");
+        for (i = 0; i < pGraph->nVertices; i++) {
+            fprintf(pFile, "%s", pGraph->vertices[nSortedIndices[i]]);
+            if (i < pGraph->nVertices - 1) {
+                fprintf(pFile, ",");
             }
         }
+        fprintf(pFile, "}\n");
+        
+        /* Write E(G) */
+        fprintf(pFile, "E(G)={");
+        nEdgeCount = 0;
+        for (i = 0; i < pGraph->nVertices; i++) {
+            for (j = i + 1; j < pGraph->nVertices; j++) {
+                if (pGraph->adjMatrix[nSortedIndices[i]][nSortedIndices[j]] == 1) {
+                    if (nEdgeCount > 0) {
+                        fprintf(pFile, ",");
+                    }
+                    fprintf(pFile, "(%s,%s)", pGraph->vertices[nSortedIndices[i]], pGraph->vertices[nSortedIndices[j]]);
+                    nEdgeCount++;
+                }
+            }
+        }
+        fprintf(pFile, "}\n");
+        
+        fclose(pFile);
+        nSuccess = 1;
     }
-    fprintf(pFile, "}\n");
     
-    fclose(pFile);
-    return 1;
+    return nSuccess;
 }
 
 int produceOutputFile2(String10 strOutputFileName, graphType* pGraph)
@@ -177,29 +176,31 @@ int produceOutputFile2(String10 strOutputFileName, graphType* pGraph)
     String50 strFileName;
     int nSortedIndices[MAX_VERTICES];
     int i, j, nDegree;
+    int nSuccess;
     
+    nSuccess = 0;
     createOutputFileName(strOutputFileName, "-DEGREE", strFileName);
-    pFile = fopen(strFileName, "w");
-    if (pFile == NULL) {
-        return 0;
-    }
     
-    /* Sort vertices alphabetically */
-    sortVerticesAlphabetically(pGraph, nSortedIndices);
-    
-    /* Write vertices with degrees */
-    for (i = 0; i < pGraph->nVertices; i++) {
-        nDegree = 0;
-        for (j = 0; j < pGraph->nVertices; j++) {
-            if (pGraph->adjMatrix[nSortedIndices[i]][j] == 1) {
-                nDegree++;
+    if ((pFile = fopen(strFileName, "w")) != NULL) {
+        /* Sort vertices alphabetically */
+        sortVerticesAlphabetically(pGraph, nSortedIndices);
+        
+        /* Write vertices with degrees */
+        for (i = 0; i < pGraph->nVertices; i++) {
+            nDegree = 0;
+            for (j = 0; j < pGraph->nVertices; j++) {
+                if (pGraph->adjMatrix[nSortedIndices[i]][j] == 1) {
+                    nDegree++;
+                }
             }
+            fprintf(pFile, "%s %d\n", pGraph->vertices[nSortedIndices[i]], nDegree);
         }
-        fprintf(pFile, "%s %d\n", pGraph->vertices[nSortedIndices[i]], nDegree);
+        
+        fclose(pFile);
+        nSuccess = 1;
     }
     
-    fclose(pFile);
-    return 1;
+    return nSuccess;
 }
 
 int produceOutputFile3(String10 strOutputFileName, graphType* pGraph)
@@ -207,25 +208,27 @@ int produceOutputFile3(String10 strOutputFileName, graphType* pGraph)
     FILE* pFile;
     String50 strFileName;
     int i, j;
+    int nSuccess;
     
+    nSuccess = 0;
     createOutputFileName(strOutputFileName, "-LIST", strFileName);
-    pFile = fopen(strFileName, "w");
-    if (pFile == NULL) {
-        return 0;
-    }
     
-    /* Write adjacency list in same order as input file */
-    for (i = 0; i < pGraph->nVertices; i++) {
-        fprintf(pFile, "%s", pGraph->vertices[i]);
-        /* Use stored adjacency list to maintain input order */
-        for (j = 0; j < pGraph->adjCount[i]; j++) {
-            fprintf(pFile, "->%s", pGraph->adjList[i][j]);
+    if ((pFile = fopen(strFileName, "w")) != NULL) {
+        /* Write adjacency list in same order as input file */
+        for (i = 0; i < pGraph->nVertices; i++) {
+            fprintf(pFile, "%s", pGraph->vertices[i]);
+            /* Use stored adjacency list to maintain input order */
+            for (j = 0; j < pGraph->adjCount[i]; j++) {
+                fprintf(pFile, "->%s", pGraph->adjList[i][j]);
+            }
+            fprintf(pFile, "->\\\n");
         }
-        fprintf(pFile, "->\\\n");
+        
+        fclose(pFile);
+        nSuccess = 1;
     }
     
-    fclose(pFile);
-    return 1;
+    return nSuccess;
 }
 
 int produceOutputFile4(String10 strOutputFileName, graphType* pGraph)
@@ -233,34 +236,36 @@ int produceOutputFile4(String10 strOutputFileName, graphType* pGraph)
     FILE* pFile;
     String50 strFileName;
     int i, j;
+    int nSuccess;
     
+    nSuccess = 0;
     createOutputFileName(strOutputFileName, "-MATRIX", strFileName);
-    pFile = fopen(strFileName, "w");
-    if (pFile == NULL) {
-        return 0;
-    }
     
-    /* Write column headers */
-    fprintf(pFile, " ");
-    for (i = 0; i < pGraph->nVertices; i++) {
-        fprintf(pFile, " %s", pGraph->vertices[i]);
-    }
-    fprintf(pFile, "\n");
-    
-    /* Write matrix with row labels */
-    for (i = 0; i < pGraph->nVertices; i++) {
-        fprintf(pFile, "%s", pGraph->vertices[i]);
-        for (j = 0; j < pGraph->nVertices; j++) {
-            fprintf(pFile, " %d", pGraph->adjMatrix[i][j]);
+    if ((pFile = fopen(strFileName, "w")) != NULL) {
+        /* Write column headers */
+        fprintf(pFile, " ");
+        for (i = 0; i < pGraph->nVertices; i++) {
+            fprintf(pFile, " %s", pGraph->vertices[i]);
         }
         fprintf(pFile, "\n");
+        
+        /* Write matrix with row labels */
+        for (i = 0; i < pGraph->nVertices; i++) {
+            fprintf(pFile, "%s", pGraph->vertices[i]);
+            for (j = 0; j < pGraph->nVertices; j++) {
+                fprintf(pFile, " %d", pGraph->adjMatrix[i][j]);
+            }
+            fprintf(pFile, "\n");
+        }
+        
+        fclose(pFile);
+        nSuccess = 1;
     }
     
-    fclose(pFile);
-    return 1;
+    return nSuccess;
 }
 
-int bfsTraversal(graphType* pGraph, int nStartIndex, String10 strResult[])
+int performBfsTraversal(graphType* pGraph, int nStartIndex, String10 strResult[])
 {
     int nQueue[MAX_VERTICES];
     int nFront, nRear;
@@ -326,7 +331,7 @@ int bfsTraversal(graphType* pGraph, int nStartIndex, String10 strResult[])
     return nResultCount;
 }
 
-int dfsTraversalRecursive(graphType* pGraph, int nCurrentVertex, int nVisited[], String10 strResult[], int* pResultCount)
+int performDfsRecursive(graphType* pGraph, int nCurrentVertex, int nVisited[], String10 strResult[], int* pResultCount)
 {
     int i, j;
     int nCandidates[MAX_VERTICES];
@@ -363,14 +368,14 @@ int dfsTraversalRecursive(graphType* pGraph, int nCurrentVertex, int nVisited[],
     /* Visit candidates in alphabetical order */
     for (i = 0; i < nCandidateCount; i++) {
         if (nVisited[nCandidates[i]] == 0) {
-            dfsTraversalRecursive(pGraph, nCandidates[i], nVisited, strResult, pResultCount);
+            performDfsRecursive(pGraph, nCandidates[i], nVisited, strResult, pResultCount);
         }
     }
     
     return 1;
 }
 
-int dfsTraversal(graphType* pGraph, int nStartIndex, String10 strResult[])
+int performDfsTraversal(graphType* pGraph, int nStartIndex, String10 strResult[])
 {
     int nVisited[MAX_VERTICES];
     int nResultCount;
@@ -383,7 +388,7 @@ int dfsTraversal(graphType* pGraph, int nStartIndex, String10 strResult[])
     }
     
     /* Start DFS */
-    dfsTraversalRecursive(pGraph, nStartIndex, nVisited, strResult, &nResultCount);
+    performDfsRecursive(pGraph, nStartIndex, nVisited, strResult, &nResultCount);
     
     return nResultCount;
 }
@@ -394,31 +399,29 @@ int produceOutputFile5(String10 strOutputFileName, graphType* pGraph, String10 s
     String50 strFileName;
     String10 strResult[MAX_VERTICES];
     int nStartIndex, nResultCount, i;
+    int nSuccess;
     
+    nSuccess = 0;
     createOutputFileName(strOutputFileName, "-BFS", strFileName);
-    pFile = fopen(strFileName, "w");
-    if (pFile == NULL) {
-        return 0;
-    }
     
-    nStartIndex = findVertexIndex(pGraph, strStartVertex);
-    if (nStartIndex == -1) {
-        fclose(pFile);
-        return 0;
-    }
-    
-    nResultCount = bfsTraversal(pGraph, nStartIndex, strResult);
-    
-    for (i = 0; i < nResultCount; i++) {
-        fprintf(pFile, "%s", strResult[i]);
-        if (i < nResultCount - 1) {
-            fprintf(pFile, " ");
+    if ((pFile = fopen(strFileName, "w")) != NULL) {
+        nStartIndex = findVertexIndex(pGraph, strStartVertex);
+        if (nStartIndex != -1) {
+            nResultCount = performBfsTraversal(pGraph, nStartIndex, strResult);
+            
+            for (i = 0; i < nResultCount; i++) {
+                fprintf(pFile, "%s", strResult[i]);
+                if (i < nResultCount - 1) {
+                    fprintf(pFile, " ");
+                }
+            }
+            fprintf(pFile, "\n");
+            nSuccess = 1;
         }
+        fclose(pFile);
     }
-    fprintf(pFile, "\n");
     
-    fclose(pFile);
-    return 1;
+    return nSuccess;
 }
 
 int produceOutputFile6(String10 strOutputFileName, graphType* pGraph, String10 strStartVertex)
@@ -427,29 +430,27 @@ int produceOutputFile6(String10 strOutputFileName, graphType* pGraph, String10 s
     String50 strFileName;
     String10 strResult[MAX_VERTICES];
     int nStartIndex, nResultCount, i;
+    int nSuccess;
     
+    nSuccess = 0;
     createOutputFileName(strOutputFileName, "-DFS", strFileName);
-    pFile = fopen(strFileName, "w");
-    if (pFile == NULL) {
-        return 0;
-    }
     
-    nStartIndex = findVertexIndex(pGraph, strStartVertex);
-    if (nStartIndex == -1) {
-        fclose(pFile);
-        return 0;
-    }
-    
-    nResultCount = dfsTraversal(pGraph, nStartIndex, strResult);
-    
-    for (i = 0; i < nResultCount; i++) {
-        fprintf(pFile, "%s", strResult[i]);
-        if (i < nResultCount - 1) {
-            fprintf(pFile, " ");
+    if ((pFile = fopen(strFileName, "w")) != NULL) {
+        nStartIndex = findVertexIndex(pGraph, strStartVertex);
+        if (nStartIndex != -1) {
+            nResultCount = performDfsTraversal(pGraph, nStartIndex, strResult);
+            
+            for (i = 0; i < nResultCount; i++) {
+                fprintf(pFile, "%s", strResult[i]);
+                if (i < nResultCount - 1) {
+                    fprintf(pFile, " ");
+                }
+            }
+            fprintf(pFile, "\n");
+            nSuccess = 1;
         }
+        fclose(pFile);
     }
-    fprintf(pFile, "\n");
     
-    fclose(pFile);
-    return 1;
+    return nSuccess;
 }
