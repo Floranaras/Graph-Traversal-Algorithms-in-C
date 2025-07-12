@@ -9,7 +9,7 @@ int main ()
 	printf("Input filename: ");
 	scanf("%s", strInputFileName);
 
-	nFileExists = readFromFile(strInputFileName, &graph);
+	nFileExists = readInputFile(strInputFileName, &graph);
 
 	if (!nFileExists)
 		printf("File %s not found.\n", strInputFileName);
