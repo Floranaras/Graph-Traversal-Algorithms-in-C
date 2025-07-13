@@ -14,8 +14,6 @@ struct graphTag
 	String10 vertices[MAX_VERTICES];
 	int nVertices;
 	int adjMatrix[MAX_VERTICES][MAX_VERTICES];
-	String10 adjList[MAX_VERTICES][MAX_VERTICES];
-	int adjCount[MAX_VERTICES];
 };
 
 typedef struct graphTag graphType;

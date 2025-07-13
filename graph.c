@@ -1,13 +1,43 @@
 #include "graph.h"
 
+void initMatrix (int matrix[][MAX_VERTICES], int size)
+{
+	int i, j;	
+
+	for (i = 0; i < size; i++)
+	{
+		for (j = 0; j < size; j++)
+		{
+			matrix[i][j] = 0;
+		}
+	}
+}
+
+int findVertexIdx (graphType *graph, String10 strVertex)
+{
+	int i;
+	int idx = -1;
+
+	for (i = 0; i < graph->nVertices && idx == -1; i++)
+	{
+		if (!strcmp(graph->vertices[i],strVertex))
+		{
+			idx = i;
+		}
+	}
+
+	return idx;
+}
+
 int readInputFile (String10 strInputFileName, graphType *graph)
 {
 	FILE *pFile;
-	int i, j, k;
-	int bFound = 0;
+	int i, j;
 	String10 strToken;
-	int nSuccess;
+	String10 tempAdjList[MAX_VERTICES];
+	int tempAdjCount;
 	int nAdjIndex;
+	int nSuccess;
 
 	nSuccess = 0;
 	
@@ -17,51 +47,30 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 	{
 		fscanf(pFile, "%d", &graph->nVertices);
 
-		// Initialization why no helper func allow
-		for (i = 0; i < MAX_VERTICES; i++)
-		{
-			graph->adjCount[j] = 0;
-			for (j = 0; j < MAX_VERTICES; j++)
-			{
-				graph->adjMatrix[i][j] = 0;
-			}
-		}
+		initMatrix(graph->adjMatrix, MAX_VERTICES);
 
-		// Adjacency info
 		for (i = 0; i < graph->nVertices; i++)
 		{
+			fscanf(pFile,"%s", graph->vertices[i]);
+
+			tempAdjCount = 0;	
 			fscanf(pFile, "%s", strToken);
 
 			while (strcmp(strToken,"-1") != 0)
 			{
-				strcpy(graph->adjList[i][graph->adjCount[i]],strToken);
-				graph->adjCount[i]++;
+				strcpy(tempAdjList[tempAdjCount],strToken);
+				tempAdjCount++;
 				fscanf (pFile, "%s", strToken);
 			}
-		}
 
-		// Make Adjacency Matrix
-		
-		for (i = 0; i < graph->nVertices; i++)
-		{
-			for (j = 0; j < graph->adjCount[i]; j++)
+			for (j = 0; j < tempAdjCount; j++)
 			{
-				bFound = 0;
-				for (k = 0; k < graph->nVertices && bFound; k++)
-				{
-					if (!strcmp(graph->vertices[k],graph->adjList[i][j]))
-					{
-						nAdjIndex = k;
-						bFound = 1;
-					}
-				}
-
+				nAdjIndex = findVertexIdx(graph,tempAdjList[j]);
 				if (nAdjIndex != -1)
 				{
 					graph->adjMatrix[i][nAdjIndex] = 1;
 					graph->adjMatrix[nAdjIndex][i] = 1;
 				}
-
 			}
 		}
 
