@@ -12,8 +12,9 @@ typedef char String50[MAX_FILENAME_LENGTH];
 struct graphTag
 {
 	String10 vertices[MAX_VERTICES];
-	int nVertices;
-	int adjMatrix[MAX_VERTICES][MAX_VERTICES];
+    int nVertices;
+    String10 adjList[MAX_VERTICES][MAX_VERTICES];
+    int adjCount[MAX_VERTICES];
 };
 
 typedef struct graphTag graphType;
