@@ -1,12 +1,25 @@
 #include "graph.h"
 
+void getBaseFileName (String10 baseName, String10 inputName)
+{
+    int j = 0;
+
+    while (inputName[j] != '.')
+    {
+        baseName[j] = inputName[j];
+        j++;
+    }
+
+    baseName[j] = '\0';
+}
+
 void initRep (int matrix[][MAX_VERTICES], int *list, int size)
 {
     int i, j;
 
     for (i = 0; i < MAX_VERTICES; i++)
     {
-        list = 0;
+        list[i] = 0;
         for (j = 0; j < MAX_VERTICES; j++)
         {
             matrix[i][j] = 0;
@@ -37,7 +50,7 @@ void makeAdjMatrix (graphType *graph)
 
     for (i = 0; i < graph->nVertices; i++)
     {
-        for (j = 0; j < graph->nVertices; j++)
+        for (j = 0; j < graph->adjCount[i]; j++)
         {
             nAdjIdx = findVertexIdx(graph, graph->adjList[i][j]);   
 
@@ -53,10 +66,9 @@ void makeAdjMatrix (graphType *graph)
 int readInputFile (String10 strInputFileName, graphType *graph)
 {
 	FILE *pFile;
-	int i, j;
+	int i;
 	String10 strToken;
 	int nSuccess = 0;	
-    int nAdjIdx;
 
 	pFile = fopen (strInputFileName,"r");
 
@@ -91,5 +103,86 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 	return nSuccess;
 }
 
+void getOutputFileName (String10 baseName, char *suffix)
+{
+    strcat(baseName, suffix);
+    strcat(baseName,".TXT");
+}
 
+void sortVertices (graphType* graph, int *idx)
+{
+    int i, j, temp;
 
+    for (i = 0; i < graph->nVertices; i++)
+    {
+        idx[i] = i;
+    }
+
+    for (i = 0; i < graph->nVertices - 1; i++)
+    {
+        for (j = 0; j < graph->nVertices - 1 - i; j++)
+        {
+            if (strcmp(graph->vertices[idx[j]],graph->vertices[idx[j+1]]) > 0)
+            {
+                temp = idx[j];
+                idx[j] = idx[j+1];
+                idx[j+1] = temp;
+            }
+        }
+    }
+}
+
+void produceOutputFile1 (String10 baseName, graphType *graph)
+{
+    FILE *fp;
+    int i, j;
+    int nSortedIdx[MAX_VERTICES];
+    int nEdgeCtr = 0;
+    
+    getOutputFileName (baseName,"-SET");
+
+    fp = fopen(baseName,"w");
+
+    if (fp == NULL)
+        printf("Output File 1 Error\n");
+    else
+    {
+        // write v(g)
+        // write e(g)
+
+        sortVertices(graph, nSortedIdx);
+        fprintf(fp,"V(G)={");
+        
+        for (i = 0; i < graph->nVertices; i++)
+        {
+            fprintf (fp,"%s",graph->vertices[nSortedIdx[i]]);
+            if (i < graph->nVertices - 1)
+            {
+                fprintf(fp,",");
+            }
+        }
+        fprintf(fp,"}\n");
+ 
+        fprintf(fp,"E(G)={");
+        for (i = 0; i < graph->nVertices; i++)
+        {
+            for (j = i + 1; j < graph->nVertices; j++)
+            {
+                if (graph->adjMatrix[nSortedIdx[i]][nSortedIdx[j]] == 1)
+                {
+                    if (nEdgeCtr > 0)
+                    {
+                        fprintf(fp,",");
+                    }
+
+                    fprintf(fp,"(%s,%s)", graph->vertices[nSortedIdx[i]],
+                                        graph->vertices[nSortedIdx[j]]);
+                    nEdgeCtr++;
+                }
+            }
+        }
+        fprintf(fp,"}\n");
+
+        fclose(fp);
+    }
+}
