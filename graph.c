@@ -19,12 +19,11 @@ int findVertexIdx (graphType *graph, String10 strVertex)
 int readInputFile (String10 strInputFileName, graphType *graph)
 {
 	FILE *pFile;
-	int i;
+	int i, j;
 	String10 strToken;
-	int nSuccess;
+	int nSuccess = 0;	
+    int nAdjIdx;
 
-	nSuccess = 0;
-	
 	pFile = fopen (strInputFileName,"r");
 
 	if (pFile != NULL)
@@ -34,6 +33,10 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 		for (i = 0; i < MAX_VERTICES; i++)
 		{
 			graph->adjCount[i] = 0;
+            for (j = 0; j < MAX_VERTICES; j++)
+            {
+                graph->adjMatrix[i][j] = 0;
+            }
 		}
 
 		for (i = 0; i < graph->nVertices; i++)
@@ -49,8 +52,21 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 				graph->adjCount[i]++;
 				fscanf (pFile, "%s", strToken);
 			}
-
 		}
+
+        for (i = 0; i < graph->nVertices; i++)
+        {
+            for (j = 0; j < graph->nVertices; j++)
+            {
+                nAdjIdx = findVertexIdx(graph, graph->adjList[i][j]);   
+                
+                if (nAdjIdx != -1)
+                { 
+                    graph->adjMatrix[i][nAdjIdx] = 1;
+                    graph->adjMatrix[nAdjIdx][i] = 1;
+                } 
+            }
+        }
 
 		fclose (pFile);
 		nSuccess = 1;
@@ -58,3 +74,5 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 	
 	return nSuccess;
 }
+
+
