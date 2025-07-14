@@ -1,5 +1,19 @@
 #include "graph.h"
 
+void initRep (int matrix[][MAX_VERTICES], int *list, int size)
+{
+    int i, j;
+
+    for (i = 0; i < MAX_VERTICES; i++)
+    {
+        list = 0;
+        for (j = 0; j < MAX_VERTICES; j++)
+        {
+            matrix[i][j] = 0;
+        }
+    }
+}
+
 int findVertexIdx (graphType *graph, String10 strVertex)
 {
 	int i;
@@ -16,6 +30,26 @@ int findVertexIdx (graphType *graph, String10 strVertex)
 	return idx;
 }
 
+void makeAdjMatrix (graphType *graph)
+{
+    int i, j;
+    int nAdjIdx;
+
+    for (i = 0; i < graph->nVertices; i++)
+    {
+        for (j = 0; j < graph->nVertices; j++)
+        {
+            nAdjIdx = findVertexIdx(graph, graph->adjList[i][j]);   
+
+            if (nAdjIdx != -1)
+            { 
+                graph->adjMatrix[i][nAdjIdx] = 1;
+                graph->adjMatrix[nAdjIdx][i] = 1;
+            } 
+        }
+    }
+}
+
 int readInputFile (String10 strInputFileName, graphType *graph)
 {
 	FILE *pFile;
@@ -30,15 +64,9 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 	{
 		fscanf(pFile, "%d", &graph->nVertices);
 
-		for (i = 0; i < MAX_VERTICES; i++)
-		{
-			graph->adjCount[i] = 0;
-            for (j = 0; j < MAX_VERTICES; j++)
-            {
-                graph->adjMatrix[i][j] = 0;
-            }
-		}
+	    initRep(graph->adjMatrix, graph->adjCount, MAX_VERTICES);	
 
+        // Read adjacency info from file
 		for (i = 0; i < graph->nVertices; i++)
 		{
 			fscanf(pFile,"%s", graph->vertices[i]);
@@ -54,25 +82,14 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 			}
 		}
 
-        for (i = 0; i < graph->nVertices; i++)
-        {
-            for (j = 0; j < graph->nVertices; j++)
-            {
-                nAdjIdx = findVertexIdx(graph, graph->adjList[i][j]);   
-                
-                if (nAdjIdx != -1)
-                { 
-                    graph->adjMatrix[i][nAdjIdx] = 1;
-                    graph->adjMatrix[nAdjIdx][i] = 1;
-                } 
-            }
-        }
+        makeAdjMatrix (graph);
 
-		fclose (pFile);
+    	fclose (pFile);
 		nSuccess = 1;
 	}
 	
 	return nSuccess;
 }
+
 
 
