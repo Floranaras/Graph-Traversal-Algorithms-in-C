@@ -109,9 +109,18 @@ void getOutputFileName (String10 baseName, char *suffix)
     strcat(baseName,".TXT");
 }
 
+void swapNums (int *num1, int *num2)
+{
+    int temp;
+    
+    temp = *num1;
+    *num1 = *num2;
+    *num2 = temp;
+}
+
 void sortVertices (graphType* graph, int *idx)
 {
-    int i, j, temp;
+    int i, j;
 
     for (i = 0; i < graph->nVertices; i++)
     {
@@ -123,11 +132,7 @@ void sortVertices (graphType* graph, int *idx)
         for (j = 0; j < graph->nVertices - 1 - i; j++)
         {
             if (strcmp(graph->vertices[idx[j]],graph->vertices[idx[j+1]]) > 0)
-            {
-                temp = idx[j];
-                idx[j] = idx[j+1];
-                idx[j+1] = temp;
-            }
+                swapNums(idx+j,idx+j+1); 
         }
     }
 }
