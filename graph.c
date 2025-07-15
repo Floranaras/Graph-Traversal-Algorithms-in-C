@@ -200,6 +200,7 @@ void produceOutputFile4 (String10 baseName, graphType *graph)
 {
     FILE *fp;
     String10 outputName;
+	int i;
 
     strcpy(outputName, baseName);
     
@@ -209,13 +210,13 @@ void produceOutputFile4 (String10 baseName, graphType *graph)
 
     fprintf(fp, "%-10s", "");
 
-    for (int i = 0; i < graph->nVertices; i++) {
+    for (i = 0; i < graph->nVertices; i++) {
         fprintf(fp, "%-10s ", graph->vertices[i]);
     }
 
     fprintf(fp, "\n");
 
-    for (int i = 0; i < graph->nVertices; i++) {
+    for (i = 0; i < graph->nVertices; i++) {
 
         fprintf(fp, "%-10s", graph->vertices[i]);
 
@@ -235,54 +236,106 @@ void BFS(graphType *graph, int startingIndex, String10 result[])
     int queue[MAX_VERTICES];
     int frontOfQueue = 0;
     int tailofQueue = 0;
-    int sortedIndex[MAX_VERTICES];
-    int resultCounter = 0;
+	int resultCtr = 0;
+	int currentVertex;
+	int candidates[MAX_VERTICES];
+	int candidatesCtr, i;
+	int j, minIdx, temp;
 
-    sortVertices(graph, sortedIndex);
-
-    for (int i = 0; i < graph->nVertices; i++) {
-        visited[i] = 0;
-    }
+    for (i = 0; i < graph->nVertices; i++) 
+	{
+		visited[i] = 0;
+	}
 
     queue[tailofQueue] = startingIndex;
     tailofQueue++;
+	visited[startingIndex] = 1;
 
-    while (frontOfQueue < tailofQueue) {
-        int poppedIndex = queue[frontOfQueue];
-        strcpy(result[resultCounter], graph->vertices[poppedIndex]);
-        resultCounter++;
+    while (frontOfQueue < tailofQueue) 
+	{
+        currentVertex = queue[frontOfQueue];
+		frontOfQueue++;
 
-        for (int i = 0; i < graph->nVertices; i++) {
-            int referenceIndex = graph->adjMatrix[poppedIndex][i];
-            if (!visited[i] && referenceIndex == 1) {
-                queue[tailofQueue] = i;
+        strcpy(result[resultCtr], graph->vertices[currentVertex]);
+        resultCtr++;
+
+		candidatesCtr = 0;
+        for (i = 0; i < graph->nVertices; i++) 
+		{
+            if (graph->adjMatrix[currentVertex][i] && !visited[i]) 
+			{
+                candidates[candidatesCtr] = i;
+				candidatesCtr++;
                 visited[i] = 1;
-                tailofQueue++;
             }
         }           
-        frontOfQueue++;
+
+		for (i = 0; i < candidatesCtr - 1; i++) 
+        {
+            minIdx = i;
+            for (j = i + 1; j < candidatesCtr; j++) 
+            {
+                if (strcmp(graph->vertices[candidates[j]], graph->vertices[candidates[minIdx]]) < 0) 
+                {
+                    minIdx = j;
+                }
+            }
+            if (minIdx != i) 
+            {
+                temp = candidates[i];
+                candidates[i] = candidates[minIdx];
+                candidates[minIdx] = temp;
+            }
+        }
+
+		for (i = 0; i < candidatesCtr; i++)
+		{
+			queue[tailofQueue] = candidates[i];
+			tailofQueue++;
+		}
     }
 }
 
 void produceOutputFile5 (String10 baseName, graphType *graph, String10 startingVertice) 
 {
-    FILE *fp;
-    String10 outputName;
-    String10 result[MAX_VERTICES];
+	FILE *fp;
+	String10 outputName;
+	String10 result[MAX_VERTICES];
+	int i;
+	int startingIdx;
 
-    strcpy(outputName, baseName);
-    
-    getOutputFileName(outputName,"-BFS");
+	strcpy(outputName, baseName);
+	getOutputFileName(outputName,"-BFS");
+	startingIdx = findVertexIdx(graph, startingVertice);
 
-    fp = fopen(outputName,"w");
+	fp = fopen(outputName,"w");
 
-    int startingIndex = findVertexIdx(graph, startingVertice);
+	if (fp == NULL)
+	{
+		printf("Error: Could not open output file\n");
+	}
+	else if (startingIdx == -1)
+	{
+		printf("Error: Starting vertex not found\n");
+		fclose(fp);
+	}
+	else 
+	{
+		BFS(graph, startingIdx, result);
 
-    BFS(graph, startingIndex, result);
+		for (i = 0; i < graph->nVertices; i++) 
+		{
+			if (strlen(result[i]) > 0)
+			{		
+				fprintf(fp, "%s ", result[i]);
+				if (i < graph->nVertices - 1 && strlen(result[i + 1]) > 0) 
+				{
+                	fprintf(fp, " ");
+            	}
+			}
+		}
+		fprintf(fp,"\n");
 
-    for (int i = 0; i < graph->nVertices; i++) {
-        fprintf(fp, "%s ", result[i]);
-    }
-
-    fclose(fp);
+		fclose(fp);
+	}
 }

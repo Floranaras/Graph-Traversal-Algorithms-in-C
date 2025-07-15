@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #define MAX_VERTICES (20)
-#define MAX_NAME_LENGTH (8)
+#define MAX_NAME_LENGTH (50)
 #define MAX_FILENAME_LENGTH (50)
 
 typedef char String10[MAX_NAME_LENGTH];
