@@ -19,6 +19,7 @@ int main ()
         getBaseFileName(strBaseFileName, strInputFileName);
 
         produceOutputFile1 (strBaseFileName, &graph);
+		produceOutputFile4 (strBaseFileName, &graph);
 	}
 
 	return 0;

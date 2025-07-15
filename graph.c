@@ -68,7 +68,7 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 	FILE *pFile;
 	int i;
 	String10 strToken;
-	int nSuccess = 0;	
+	int nSuccess = 0;
 
 	pFile = fopen (strInputFileName,"r");
 
@@ -143,10 +143,13 @@ void produceOutputFile1 (String10 baseName, graphType *graph)
     int i, j;
     int nSortedIdx[MAX_VERTICES];
     int nEdgeCtr = 0;
-    
-    getOutputFileName (baseName,"-SET");
+    String10 outputName;
 
-    fp = fopen(baseName,"w");
+    strcpy(outputName, baseName);
+    
+    getOutputFileName (outputName,"-SET");
+
+    fp = fopen(outputName,"w");
 
     if (fp == NULL)
         printf("Output File 1 Error\n");
@@ -190,4 +193,37 @@ void produceOutputFile1 (String10 baseName, graphType *graph)
 
         fclose(fp);
     }
+}
+
+void produceOutputFile4 (String10 baseName, graphType *graph) 
+{
+    FILE *fp;
+    String10 outputName;
+
+    strcpy(outputName, baseName);
+    
+    getOutputFileName(outputName,"-MATRIX");
+
+    fp = fopen(outputName,"w");
+
+    fprintf(fp, "%-10s", "");
+
+    for (int i = 0; i < graph->nVertices; i++) {
+        fprintf(fp, "%-10s ", graph->vertices[i]);
+    }
+
+    fprintf(fp, "\n");
+
+    for (int i = 0; i < graph->nVertices; i++) {
+
+        fprintf(fp, "%-10s", graph->vertices[i]);
+
+        for (int j = 0; j < graph->nVertices; j++) {
+            fprintf(fp, "%-10d", graph->adjMatrix[i][j]);
+        }
+
+        fprintf(fp, "\n");
+    }
+
+    fclose(fp);
 }
