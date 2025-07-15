@@ -229,22 +229,14 @@ void produceOutputFile4 (String10 baseName, graphType *graph)
     fclose(fp);
 }
 
-int duplicateVisit(int checkingIndex, int visited[], int indexOfVisit)
-{
-    if (checkingIndex == visited[indexOfVisit]) {
-        return 1;
-    }
-
-    return 0;
-}
-
 void BFS(graphType *graph, int startingIndex, String10 result[]) 
 {
-    int visited[graph->nVertices];
+    int visited[MAX_VERTICES];
     int queue[MAX_VERTICES];
     int frontOfQueue = 0;
     int tailofQueue = 0;
-    int sortedIndex[graph->nVertices];
+    int sortedIndex[MAX_VERTICES];
+    int resultCounter = 0;
 
     sortVertices(graph, sortedIndex);
 
@@ -257,13 +249,14 @@ void BFS(graphType *graph, int startingIndex, String10 result[])
 
     while (frontOfQueue < tailofQueue) {
         int poppedIndex = queue[frontOfQueue];
-        strcpy(result[frontOfQueue], graph->vertices[poppedIndex]);
-        visited[frontOfQueue] = 1;
+        strcpy(result[resultCounter], graph->vertices[poppedIndex]);
+        visited[poppedIndex] = 1;
+        resultCounter++;
 
         for (int i = 0; i < graph->nVertices; i++) {
             int referenceIndex = graph->adjMatrix[poppedIndex][i];
-            if (!duplicateVisit(referenceIndex, visited, i) && referenceIndex == 1) {
-                queue[tailofQueue] = referenceIndex;
+            if (!visited[i] && referenceIndex == 1) {
+                queue[tailofQueue] = i;
                 tailofQueue++;
             }
         }           
@@ -275,7 +268,7 @@ void produceOutputFile5 (String10 baseName, graphType *graph, String10 startingV
 {
     FILE *fp;
     String10 outputName;
-    String10 result[graph->nVertices];
+    String10 result[MAX_VERTICES];
 
     strcpy(outputName, baseName);
     
