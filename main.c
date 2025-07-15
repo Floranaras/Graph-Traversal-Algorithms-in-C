@@ -3,7 +3,7 @@
 int main ()
 {
 	graphType graph;
-	String10 strInputFileName, strStartVertex, strBaseFileName;
+	String50 strInputFileName, strStartVertex, strBaseFileName;
 	int nFileExists, nVertexExists;
 
 	printf("Input filename: ");

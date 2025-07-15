@@ -1,6 +1,6 @@
 #include "graph.h"
 
-void getBaseFileName (String10 baseName, String10 inputName)
+void getBaseFileName (String50 baseName, String50 inputName)
 {
     int j = 0;
 
@@ -27,7 +27,7 @@ void initRep (int matrix[][MAX_VERTICES], int *list, int size)
     }
 }
 
-int findVertexIdx (graphType *graph, String10 strVertex)
+int findVertexIdx (graphType *graph, String50 strVertex)
 {
 	int i;
 	int idx = -1;
@@ -63,11 +63,11 @@ void makeAdjMatrix (graphType *graph)
     }
 }
 
-int readInputFile (String10 strInputFileName, graphType *graph)
+int readInputFile (String50 strInputFileName, graphType *graph)
 {
 	FILE *pFile;
 	int i;
-	String10 strToken;
+	String50 strToken;
 	int nSuccess = 0;
 
 	pFile = fopen (strInputFileName,"r");
@@ -103,7 +103,7 @@ int readInputFile (String10 strInputFileName, graphType *graph)
 	return nSuccess;
 }
 
-void getOutputFileName (String10 baseName, char *suffix)
+void getOutputFileName (String50 baseName, char *suffix)
 {
     strcat(baseName, suffix);
     strcat(baseName,".TXT");
@@ -138,13 +138,13 @@ void sortVertices (graphType* graph, int *idx)
 }
 
 
-void produceOutputFile1 (String10 baseName, graphType *graph)
+void produceOutputFile1 (String50 baseName, graphType *graph)
 {
     FILE *fp;
     int i, j;
     int nSortedIdx[MAX_VERTICES];
     int nEdgeCtr = 0;
-    String10 outputName;
+    String50 outputName;
 
     strcpy(outputName, baseName);
     
@@ -196,10 +196,10 @@ void produceOutputFile1 (String10 baseName, graphType *graph)
     }
 }
 
-void produceOutputFile4 (String10 baseName, graphType *graph) 
+void produceOutputFile4 (String50 baseName, graphType *graph) 
 {
     FILE *fp;
-    String10 outputName;
+    String50 outputName;
 	int i;
 
     strcpy(outputName, baseName);
@@ -230,7 +230,7 @@ void produceOutputFile4 (String10 baseName, graphType *graph)
     fclose(fp);
 }
 
-void BFS(graphType *graph, int startingIndex, String10 result[]) 
+void BFS(graphType *graph, int startingIndex, String50 result[]) 
 {
     int visited[MAX_VERTICES];
     int queue[MAX_VERTICES];
@@ -296,11 +296,11 @@ void BFS(graphType *graph, int startingIndex, String10 result[])
     }
 }
 
-void produceOutputFile5 (String10 baseName, graphType *graph, String10 startingVertice) 
+void produceOutputFile5 (String50 baseName, graphType *graph, String50 startingVertice) 
 {
 	FILE *fp;
-	String10 outputName;
-	String10 result[MAX_VERTICES];
+	String50 outputName;
+	String50 result[MAX_VERTICES];
 	int i;
 	int startingIdx;
 
