@@ -250,13 +250,13 @@ void BFS(graphType *graph, int startingIndex, String10 result[])
     while (frontOfQueue < tailofQueue) {
         int poppedIndex = queue[frontOfQueue];
         strcpy(result[resultCounter], graph->vertices[poppedIndex]);
-        visited[poppedIndex] = 1;
         resultCounter++;
 
         for (int i = 0; i < graph->nVertices; i++) {
             int referenceIndex = graph->adjMatrix[poppedIndex][i];
             if (!visited[i] && referenceIndex == 1) {
                 queue[tailofQueue] = i;
+                visited[i] = 1;
                 tailofQueue++;
             }
         }           
