@@ -137,6 +137,7 @@ void sortVertices (graphType* graph, int *idx)
     }
 }
 
+
 void produceOutputFile1 (String10 baseName, graphType *graph)
 {
     FILE *fp;
@@ -223,6 +224,71 @@ void produceOutputFile4 (String10 baseName, graphType *graph)
         }
 
         fprintf(fp, "\n");
+    }
+
+    fclose(fp);
+}
+
+int duplicateVisit(int checkingIndex, int visited[], int indexOfVisit)
+{
+    if (checkingIndex == visited[indexOfVisit]) {
+        return 1;
+    }
+
+    return 0;
+}
+
+void BFS(graphType *graph, int startingIndex, String10 result[]) 
+{
+    int visited[graph->nVertices];
+    int queue[MAX_VERTICES];
+    int frontOfQueue = 0;
+    int tailofQueue = 0;
+    int sortedIndex[graph->nVertices];
+
+    sortVertices(graph, sortedIndex);
+
+    for (int i = 0; i < graph->nVertices; i++) {
+        visited[i] = 0;
+    }
+
+    queue[tailofQueue] = startingIndex;
+    tailofQueue++;
+
+    while (frontOfQueue < tailofQueue) {
+        int poppedIndex = queue[frontOfQueue];
+        strcpy(result[frontOfQueue], graph->vertices[poppedIndex]);
+        visited[frontOfQueue] = 1;
+
+        for (int i = 0; i < graph->nVertices; i++) {
+            int referenceIndex = graph->adjMatrix[poppedIndex][i];
+            if (!duplicateVisit(referenceIndex, visited, i) && referenceIndex == 1) {
+                queue[tailofQueue] = referenceIndex;
+                tailofQueue++;
+            }
+        }           
+        frontOfQueue++;
+    }
+}
+
+void produceOutputFile5 (String10 baseName, graphType *graph, String10 startingVertice) 
+{
+    FILE *fp;
+    String10 outputName;
+    String10 result[graph->nVertices];
+
+    strcpy(outputName, baseName);
+    
+    getOutputFileName(outputName,"-BFS");
+
+    fp = fopen(outputName,"w");
+
+    int startingIndex = findVertexIdx(graph, startingVertice);
+
+    BFS(graph, startingIndex, result);
+
+    for (int i = 0; i < graph->nVertices; i++) {
+        fprintf(fp, "%s ", result[i]);
     }
 
     fclose(fp);

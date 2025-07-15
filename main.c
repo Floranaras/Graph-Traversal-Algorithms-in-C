@@ -15,11 +15,15 @@ int main ()
 		printf("File %s not found.\n", strInputFileName);
 	else
 	{
+		printf("Input starting label: ");
+		scanf("%s", strStartVertex);
+
 		// entire algo here	
         getBaseFileName(strBaseFileName, strInputFileName);
 
         produceOutputFile1 (strBaseFileName, &graph);
 		produceOutputFile4 (strBaseFileName, &graph);
+		produceOutputFile5 (strBaseFileName, &graph, strStartVertex);
 	}
 
 	return 0;
