@@ -4,7 +4,7 @@ int main ()
 {
     graphType graph;
     String50 strInputFileName, strStartVertex, strBaseFileName;
-    int nFileExists, nVertexExists;
+    int nFileExists;
 
     printf("Input filename: ");
     scanf("%s", strInputFileName);
@@ -24,6 +24,8 @@ int main ()
         produceOutputFile1 (strBaseFileName, &graph);
         produceOutputFile4 (strBaseFileName, &graph);
         produceOutputFile5 (strBaseFileName, &graph, strStartVertex);
+
+        freeAdjList(&graph);
     }
 
     return 0;

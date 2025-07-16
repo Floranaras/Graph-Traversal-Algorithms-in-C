@@ -27,6 +27,53 @@ void initRep (int matrix[][MAX_VERTICES], int *list, int size)
     }
 }
 
+adjNode* createNode (String50 vertex)
+{
+    adjNode* newNode = (adjNode*)malloc(sizeof(adjNode));
+    
+    if (newNode != NULL)
+    {
+        strcpy (newNode->vertex, vertex);
+        newNode->next = NULL;
+    }
+
+    return newNode;
+}
+
+void addToAdjList (graphType *graph, int vertexIdx, String50 adjVertex)
+{
+    adjNode* newNode = createNode (adjVertex);
+
+    if (newNode != NULL)
+    {
+        newNode->next = graph->adjList[vertexIdx];
+        graph->adjList[vertexIdx] = newNode;
+        graph->adjCount[vertexIdx]++;
+    }
+}
+
+void freeAdjList(graphType *graph)
+{
+    int i;
+    adjNode* current;
+    adjNode* next;
+
+    for (i = 0; i < MAX_VERTICES; i++)
+    {
+        current = graph->adjList[i];
+        
+        while (current != NULL)
+        {
+            next = current->next;
+            free(current);
+            current = next;
+        }
+
+        graph->adjList[i] = NULL;
+        graph->adjCount[i] = 0;
+    }
+}
+
 int findVertexIdx (graphType *graph, String50 strVertex)
 {
     int i;
@@ -47,18 +94,30 @@ void makeAdjMatrix (graphType *graph)
 {
     int i, j;
     int nAdjIdx;
+    adjNode* current;
+
+    for (i = 0; i < MAX_VERTICES; i++)
+    {
+        for (j = 0; j < MAX_VERTICES; j++)
+        {
+            graph->adjMatrix[i][j] = 0;
+        }
+    }
 
     for (i = 0; i < graph->nVertices; i++)
     {
-        for (j = 0; j < graph->adjCount[i]; j++)
+        current = graph->adjList[i];
+        while (current != NULL)
         {
-            nAdjIdx = findVertexIdx(graph, graph->adjList[i][j]);   
+            nAdjIdx = findVertexIdx (graph, current->vertex);
 
             if (nAdjIdx != -1)
-            { 
+            {
                 graph->adjMatrix[i][nAdjIdx] = 1;
                 graph->adjMatrix[nAdjIdx][i] = 1;
-            } 
+            }
+
+            current = current->next;
         }
     }
 }
@@ -78,6 +137,11 @@ int readInputFile (String50 strInputFileName, graphType *graph)
 
         initRep(graph->adjMatrix, graph->adjCount, MAX_VERTICES);	
 
+        for (i = 0; i < MAX_VERTICES; i++)
+        {
+            graph->adjList[i] = NULL;
+        }
+
         // Read adjacency info from file
         for (i = 0; i < graph->nVertices; i++)
         {
@@ -88,8 +152,7 @@ int readInputFile (String50 strInputFileName, graphType *graph)
 
             while (strcmp(strToken,"-1") != 0)
             {
-                strcpy(graph->adjList[i][graph->adjCount[i]],strToken);
-                graph->adjCount[i]++;
+                addToAdjList(graph, i, strToken);
                 fscanf (pFile, "%s", strToken);
             }
         }

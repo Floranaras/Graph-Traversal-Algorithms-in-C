@@ -7,12 +7,20 @@
 
 typedef char String50[MAX_STR];
 
+struct adjNode 
+{
+    String50 vertex;
+    struct adjNode* next;
+};
+
+typedef struct adjNode adjNode;
+
 struct graphTag
 {
     String50 vertices[MAX_VERTICES];
     int nVertices;
     int adjMatrix[MAX_VERTICES][MAX_VERTICES];
-    String50 adjList[MAX_VERTICES][MAX_VERTICES];
+    adjNode *adjList[MAX_VERTICES];
     int adjCount[MAX_VERTICES];
 };
 
@@ -31,6 +39,11 @@ void getBaseFileName (String50 baseName, String50 inputName);
 void getOutputFileName (String50 baseName, char *suffix);
 void swapNums (int *num1, int *num2);
 void sortVertices (graphType* graph, int *idx);
+
+/* Linked list helper functions */
+adjNode* createNode (String50 vertex);
+void addToAdjList (graphType *graph, int vertexIdx, String50 adjVertex);
+void freeAdjLists (graphType *graph);
 
 /* Algorithm Functions */
 void BFS(graphType *graph, int startingIndex, String50 result[]);
