@@ -37,5 +37,7 @@ void BFS(graphType *graph, int startingIndex, String50 result[]);
 
 /* Output Functions */
 void produceOutputFile1 (String50 baseName, graphType *graph);
+void produceOutputFile2 (String50 baseName, graphType *graph);
+void produceOutputFile3 (String50 baseName, graphType *graph);
 void produceOutputFile4 (String50 baseName, graphType *graph);
 void produceOutputFile5 (String50 baseName, graphType *graph, String50 start);

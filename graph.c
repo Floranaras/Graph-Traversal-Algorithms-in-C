@@ -196,6 +196,81 @@ void produceOutputFile1 (String50 baseName, graphType *graph)
     }
 }
 
+void produceOutputFile2 (String50 baseName, graphType *graph)
+{
+    FILE *fp;
+    int i;
+    int nSortedIdx[MAX_VERTICES];
+    String50 outputName;
+
+    //get file name of output file
+    strcpy(outputName, baseName);
+    getOutputFileName(outputName, "-DEGREE");
+
+    //open output file
+    fp = fopen(outputName,"w");
+
+    if (fp == NULL)
+        printf("Output File 2 Error\n");
+    else
+    {
+        //get indices of sorted vertex
+        sortVertices(graph, nSortedIdx);
+
+        //print vertices in ascending order along with their degrees
+        for(i = 0; i < graph->nVertices; i++){
+            fprintf(fp, "%-10s", graph->vertices[nSortedIdx[i]]);
+            fprintf(fp, "%d", graph->adjCount[nSortedIdx[i]]);
+
+            if(i < graph->nVertices - 1)
+                fprintf(fp, "\n");
+        }
+
+        //close output file
+        fclose(fp);
+    }
+}
+
+void produceOutputFile3 (String50 baseName, graphType *graph)
+{
+    FILE *fp;
+    int i, j;
+    int nSortedIdx[MAX_VERTICES];
+    String50 outputName;
+
+    //get file name of output file
+    strcpy(outputName, baseName);
+    getOutputFileName(outputName, "-LIST");
+
+    //open output file
+    fp = fopen(outputName,"w");
+
+    if (fp == NULL)
+        printf("Output File 3 Error\n");
+    else
+    {
+        for(i = 0; i < graph->nVertices; i++)
+        {
+            //print first vertex
+            fprintf(fp, "%s->", graph->vertices[i]);
+
+            //print all vertices with an edge to the first vertex
+            for(j = 0; j < graph->adjCount[i]; j++){
+                fprintf(fp, "%s->", graph->adjList[i][j]);
+                
+                if(j == (graph->adjCount[i] - 1))
+                    fprintf(fp, "\\");
+            }
+
+            if(i < (graph->nVertices - 1))
+                    fprintf(fp, "\n");
+        }
+
+        //close output file
+        fclose(fp);
+    }
+}
+
 void produceOutputFile4 (String50 baseName, graphType *graph) 
 {
     FILE *fp;
