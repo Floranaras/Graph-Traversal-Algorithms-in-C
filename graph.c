@@ -29,18 +29,18 @@ void initRep (int matrix[][MAX_VERTICES], int *list, int size)
 
 int findVertexIdx (graphType *graph, String50 strVertex)
 {
-	int i;
-	int idx = -1;
+    int i;
+    int idx = -1;
 
-	for (i = 0; i < graph->nVertices && idx == -1; i++)
-	{
-		if (!strcmp(graph->vertices[i],strVertex))
-		{
-			idx = i;
-		}
-	}
+    for (i = 0; i < graph->nVertices && idx == -1; i++)
+    {
+        if (!strcmp(graph->vertices[i],strVertex))
+        {
+            idx = i;
+        }
+    }
 
-	return idx;
+    return idx;
 }
 
 void makeAdjMatrix (graphType *graph)
@@ -65,42 +65,42 @@ void makeAdjMatrix (graphType *graph)
 
 int readInputFile (String50 strInputFileName, graphType *graph)
 {
-	FILE *pFile;
-	int i;
-	String50 strToken;
-	int nSuccess = 0;
+    FILE *pFile;
+    int i;
+    String50 strToken;
+    int nSuccess = 0;
 
-	pFile = fopen (strInputFileName,"r");
+    pFile = fopen (strInputFileName,"r");
 
-	if (pFile != NULL)
-	{
-		fscanf(pFile, "%d", &graph->nVertices);
+    if (pFile != NULL)
+    {
+        fscanf(pFile, "%d", &graph->nVertices);
 
-	    initRep(graph->adjMatrix, graph->adjCount, MAX_VERTICES);	
+        initRep(graph->adjMatrix, graph->adjCount, MAX_VERTICES);	
 
         // Read adjacency info from file
-		for (i = 0; i < graph->nVertices; i++)
-		{
-			fscanf(pFile,"%s", graph->vertices[i]);
+        for (i = 0; i < graph->nVertices; i++)
+        {
+            fscanf(pFile,"%s", graph->vertices[i]);
 
-			graph->adjCount[i] = 0;
-			fscanf(pFile, "%s", strToken);
+            graph->adjCount[i] = 0;
+            fscanf(pFile, "%s", strToken);
 
-			while (strcmp(strToken,"-1") != 0)
-			{
-				strcpy(graph->adjList[i][graph->adjCount[i]],strToken);
-				graph->adjCount[i]++;
-				fscanf (pFile, "%s", strToken);
-			}
-		}
+            while (strcmp(strToken,"-1") != 0)
+            {
+                strcpy(graph->adjList[i][graph->adjCount[i]],strToken);
+                graph->adjCount[i]++;
+                fscanf (pFile, "%s", strToken);
+            }
+        }
 
         makeAdjMatrix (graph);
 
-    	fclose (pFile);
-		nSuccess = 1;
-	}
-	
-	return nSuccess;
+        fclose (pFile);
+        nSuccess = 1;
+    }
+
+    return nSuccess;
 }
 
 void getOutputFileName (String50 baseName, char *suffix)
@@ -112,7 +112,7 @@ void getOutputFileName (String50 baseName, char *suffix)
 void swapNums (int *num1, int *num2)
 {
     int temp;
-    
+
     temp = *num1;
     *num1 = *num2;
     *num2 = temp;
@@ -147,7 +147,7 @@ void produceOutputFile1 (String50 baseName, graphType *graph)
     String50 outputName;
 
     strcpy(outputName, baseName);
-    
+
     getOutputFileName (outputName,"-SET");
 
     fp = fopen(outputName,"w");
@@ -161,7 +161,7 @@ void produceOutputFile1 (String50 baseName, graphType *graph)
 
         sortVertices(graph, nSortedIdx);
         fprintf(fp,"V(G)={");
-        
+
         for (i = 0; i < graph->nVertices; i++)
         {
             fprintf (fp,"%s",graph->vertices[nSortedIdx[i]]);
@@ -171,7 +171,7 @@ void produceOutputFile1 (String50 baseName, graphType *graph)
             }
         }
         fprintf(fp,"}\n");
- 
+
         fprintf(fp,"E(G)={");
         for (i = 0; i < graph->nVertices; i++)
         {
@@ -185,7 +185,7 @@ void produceOutputFile1 (String50 baseName, graphType *graph)
                     }
 
                     fprintf(fp,"(%s,%s)", graph->vertices[nSortedIdx[i]],
-                                        graph->vertices[nSortedIdx[j]]);
+                            graph->vertices[nSortedIdx[j]]);
                     nEdgeCtr++;
                 }
             }
@@ -200,10 +200,10 @@ void produceOutputFile4 (String50 baseName, graphType *graph)
 {
     FILE *fp;
     String50 outputName;
-	int i;
+    int i;
 
     strcpy(outputName, baseName);
-    
+
     getOutputFileName(outputName,"-MATRIX");
 
     fp = fopen(outputName,"w");
@@ -236,41 +236,41 @@ void BFS(graphType *graph, int startingIndex, String50 result[])
     int queue[MAX_VERTICES];
     int frontOfQueue = 0;
     int tailofQueue = 0;
-	int resultCtr = 0;
-	int currentVertex;
-	int candidates[MAX_VERTICES];
-	int candidatesCtr, i;
-	int j, minIdx, temp;
+    int resultCtr = 0;
+    int currentVertex;
+    int candidates[MAX_VERTICES];
+    int candidatesCtr, i;
+    int j, minIdx, temp;
 
     for (i = 0; i < graph->nVertices; i++) 
-	{
-		visited[i] = 0;
-	}
+    {
+        visited[i] = 0;
+    }
 
     queue[tailofQueue] = startingIndex;
     tailofQueue++;
-	visited[startingIndex] = 1;
+    visited[startingIndex] = 1;
 
     while (frontOfQueue < tailofQueue) 
-	{
+    {
         currentVertex = queue[frontOfQueue];
-		frontOfQueue++;
+        frontOfQueue++;
 
         strcpy(result[resultCtr], graph->vertices[currentVertex]);
         resultCtr++;
 
-		candidatesCtr = 0;
+        candidatesCtr = 0;
         for (i = 0; i < graph->nVertices; i++) 
-		{
+        {
             if (graph->adjMatrix[currentVertex][i] && !visited[i]) 
-			{
+            {
                 candidates[candidatesCtr] = i;
-				candidatesCtr++;
+                candidatesCtr++;
                 visited[i] = 1;
             }
         }           
 
-		for (i = 0; i < candidatesCtr - 1; i++) 
+        for (i = 0; i < candidatesCtr - 1; i++) 
         {
             minIdx = i;
             for (j = i + 1; j < candidatesCtr; j++) 
@@ -288,54 +288,54 @@ void BFS(graphType *graph, int startingIndex, String50 result[])
             }
         }
 
-		for (i = 0; i < candidatesCtr; i++)
-		{
-			queue[tailofQueue] = candidates[i];
-			tailofQueue++;
-		}
+        for (i = 0; i < candidatesCtr; i++)
+        {
+            queue[tailofQueue] = candidates[i];
+            tailofQueue++;
+        }
     }
 }
 
-void produceOutputFile5 (String50 baseName, graphType *graph, String50 startingVertice) 
+void produceOutputFile5 (String50 baseName, graphType *graph, String50 start) 
 {
-	FILE *fp;
-	String50 outputName;
-	String50 result[MAX_VERTICES];
-	int i;
-	int startingIdx;
+    FILE *fp;
+    String50 outputName;
+    String50 result[MAX_VERTICES];
+    int i;
+    int startingIdx;
 
-	strcpy(outputName, baseName);
-	getOutputFileName(outputName,"-BFS");
-	startingIdx = findVertexIdx(graph, startingVertice);
+    strcpy(outputName, baseName);
+    getOutputFileName(outputName,"-BFS");
+    startingIdx = findVertexIdx(graph, start);
 
-	fp = fopen(outputName,"w");
+    fp = fopen(outputName,"w");
 
-	if (fp == NULL)
-	{
-		printf("Error: Could not open output file\n");
-	}
-	else if (startingIdx == -1)
-	{
-		printf("Error: Starting vertex not found\n");
-		fclose(fp);
-	}
-	else 
-	{
-		BFS(graph, startingIdx, result);
+    if (fp == NULL)
+    {
+        printf("Error: Could not open output file\n");
+    }
+    else if (startingIdx == -1)
+    {
+        printf("Error: Starting vertex not found\n");
+        fclose(fp);
+    }
+    else 
+{
+        BFS(graph, startingIdx, result);
 
-		for (i = 0; i < graph->nVertices; i++) 
-		{
-			if (strlen(result[i]) > 0)
-			{		
-				fprintf(fp, "%s ", result[i]);
-				if (i < graph->nVertices - 1 && strlen(result[i + 1]) > 0) 
-				{
-                	fprintf(fp, " ");
-            	}
-			}
-		}
-		fprintf(fp,"\n");
+        for (i = 0; i < graph->nVertices; i++) 
+        {
+            if (strlen(result[i]) > 0)
+            {		
+                fprintf(fp, "%s ", result[i]);
+                if (i < graph->nVertices - 1 && strlen(result[i + 1]) > 0) 
+                {
+                    fprintf(fp, " ");
+                }
+            }
+        }
+        fprintf(fp,"\n");
 
-		fclose(fp);
-	}
+        fclose(fp);
+    }
 }
