@@ -211,7 +211,7 @@ void produceOutputFile4 (String50 baseName, graphType *graph)
     fprintf(fp, "%-10s", "");
 
     for (i = 0; i < graph->nVertices; i++) {
-        fprintf(fp, "%-10s ", graph->vertices[i]);
+        fprintf(fp, "%-10s", graph->vertices[i]);
     }
 
     fprintf(fp, "\n");
