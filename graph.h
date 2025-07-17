@@ -39,6 +39,8 @@ void getBaseFileName (String50 baseName, String50 inputName);
 void getOutputFileName (String50 baseName, char *suffix);
 void swapNums (int *num1, int *num2);
 void sortVertices (graphType* graph, int *idx);
+int collectAdjacentVertices(adjNode* adjList, String50 adjVertices[]);
+void printVertexAdjacencyList(FILE* fp, String50 vertex, String50 adjVertices[], int adjCount);
 
 /* Linked list helper functions */
 adjNode* createNode (String50 vertex);
@@ -50,5 +52,7 @@ void BFS(graphType *graph, int startingIndex, String50 result[]);
 
 /* Output Functions */
 void produceOutputFile1 (String50 baseName, graphType *graph);
+void produceOutputFile2 (String50 baseName, graphType *graph);
+void produceOutputFile3 (String50 baseName, graphType *graph);
 void produceOutputFile4 (String50 baseName, graphType *graph);
 void produceOutputFile5 (String50 baseName, graphType *graph, String50 start);

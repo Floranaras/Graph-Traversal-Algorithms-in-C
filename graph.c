@@ -273,6 +273,111 @@ void produceOutputFile1 (String50 baseName, graphType *graph)
     }
 }
 
+int collectAdjacentVertices(adjNode* adjList, String50 adjVertices[])
+{
+    adjNode* current;
+    int adjCount;
+    
+    adjCount = 0;
+    current = adjList;
+    while (current != NULL) {
+        strcpy(adjVertices[adjCount], current->vertex);
+        adjCount++;
+        current = current->next;
+    }
+    
+    return adjCount;
+}
+
+void printVertexAdjacencyList(FILE* fp, String50 vertex, String50 adjVertices[], int adjCount)
+{
+    int j;
+    
+    // Print first vertex
+    fprintf(fp, "%s->", vertex);
+    
+    // Print all vertices with an edge to the first vertex
+    for(j = 0; j < adjCount; j++){
+        fprintf(fp, "%s->", adjVertices[j]);
+        
+        if(j == (adjCount - 1))
+            fprintf(fp, "\\");
+    }
+}
+
+void produceOutputFile2 (String50 baseName, graphType *graph)
+{
+    FILE *fp;
+    int i;
+    int nSortedIdx[MAX_VERTICES];
+    String50 outputName;
+    
+    // Get file name of output file
+    strcpy(outputName, baseName);
+    getOutputFileName(outputName, "-DEGREE");
+    
+    // Open output file
+    fp = fopen(outputName,"w");
+
+    if (fp == NULL)
+        printf("Output File 2 Error\n");
+
+    else
+    {
+        // Get indices of sorted vertex
+        sortVertices(graph, nSortedIdx);
+        
+        // Print vertices in ascending order along with their degrees
+        for(i = 0; i < graph->nVertices; i++)
+        {
+            fprintf(fp, "%-10s", graph->vertices[nSortedIdx[i]]);
+            fprintf(fp, "%d", graph->adjCount[nSortedIdx[i]]);
+
+            if(i < graph->nVertices - 1)
+                fprintf(fp, "\n");
+        } 
+        // Close output file
+        fclose(fp);
+    }
+}
+
+void produceOutputFile3 (String50 baseName, graphType *graph)
+{
+    FILE *fp;
+    int i;
+    String50 outputName;
+    String50 adjVertices[MAX_VERTICES];
+    int adjCount;
+    
+    // Get file name of output file
+    strcpy(outputName, baseName);
+    getOutputFileName(outputName, "-LIST");
+    
+    // Open output file
+    fp = fopen(outputName,"w");
+    if (fp == NULL)
+        printf("Output File 3 Error\n");
+
+    else
+    {
+        // Print vertices in their original input order (no sorting of vertices)
+        for(i = 0; i < graph->nVertices; i++)
+        {
+            // Collect all adjacent vertices from linked list
+            adjCount = collectAdjacentVertices(graph->adjList[i], adjVertices);
+            
+            // Print adjacency list for this vertex
+            printVertexAdjacencyList(fp, graph->vertices[i], adjVertices, adjCount);
+            
+            if(i < (graph->nVertices - 1))
+                fprintf(fp, "\n");
+        }
+        
+        // Close output file
+        fclose(fp);
+    }
+}
+
 void produceOutputFile4 (String50 baseName, graphType *graph) 
 {
     FILE *fp;

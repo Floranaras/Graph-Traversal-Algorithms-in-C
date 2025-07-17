@@ -22,6 +22,8 @@ int main ()
         getBaseFileName(strBaseFileName, strInputFileName);
 
         produceOutputFile1 (strBaseFileName, &graph);
+        produceOutputFile2 (strBaseFileName, &graph);
+        produceOutputFile3 (strBaseFileName, &graph);
         produceOutputFile4 (strBaseFileName, &graph);
         produceOutputFile5 (strBaseFileName, &graph, strStartVertex);
 
