@@ -40,14 +40,28 @@ adjNode* createNode (String50 vertex)
     return newNode;
 }
 
-void addToAdjList (graphType *graph, int vertexIdx, String50 adjVertex)
+void addToAdjList(graphType *graph, int vertexIdx, String50 adjVertex)
 {
-    adjNode* newNode = createNode (adjVertex);
+    adjNode* newNode;
+    adjNode* current;
 
-    if (newNode != NULL)
+    newNode = createNode (adjVertex);
+
+    if (newNode != NULL) 
     {
-        newNode->next = graph->adjList[vertexIdx];
-        graph->adjList[vertexIdx] = newNode;
+        if (graph->adjList[vertexIdx] == NULL) 
+            graph->adjList[vertexIdx] = newNode;
+
+        else 
+        {
+            current = graph->adjList[vertexIdx];
+
+            while (current->next != NULL)
+                current = current->next;
+
+            current->next = newNode;
+        }
+
         graph->adjCount[vertexIdx]++;
     }
 }
