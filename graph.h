@@ -56,3 +56,4 @@ void produceOutputFile2 (String50 baseName, graphType *graph);
 void produceOutputFile3 (String50 baseName, graphType *graph);
 void produceOutputFile4 (String50 baseName, graphType *graph);
 void produceOutputFile5 (String50 baseName, graphType *graph, String50 start);
+void produceOutputFile6 (String50 baseName, graphType *graph, String50 start);

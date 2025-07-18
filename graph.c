@@ -521,3 +521,51 @@ void produceOutputFile5 (String50 baseName, graphType *graph, String50 start)
         fclose(fp);
     }
 }
+
+void produceOutputFile6 (String50 baseName, graphType *graph, String50 start)
+{
+    FILE *fp;
+    String50 outputName;
+    String50 result[MAX_VERTICES];
+    int i;
+    int startingIdx;
+    int nResultsCtr;
+    int nVisited[MAX_VERTICES];
+
+    strcpy(outputName, baseName);
+    getOutputFileName(outputName,"-BFS");
+    startingIdx = findVertexIdx(graph, start);
+
+    fp = fopen(outputName,"w");
+
+    if (fp == NULL)
+    {
+        printf("Error: Could not open output file\n");
+    }
+    else if (startingIdx == -1)
+    {
+        printf("Error: Starting vertex not found\n");
+        fclose(fp);
+    }
+    else
+    {
+        for (i = 0; i < MAX_VERTICES; i++)
+        {
+            nVisited[i] = 0;
+        }
+
+        DFS (graph, staringIdx, result, nVisited, &nResultsCtr);
+
+        for (i = 0; i < nResultsCtr; i++)
+        {
+            fprintf(fp, "%s", result[i]);
+
+            if (i < nResultsCtr - 1)
+                fprintf(fp," ");
+        }
+
+        fprintf(fp,"\n");
+    }
+
+    fclose (fp);
+}
