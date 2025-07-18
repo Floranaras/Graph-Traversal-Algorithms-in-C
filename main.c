@@ -26,6 +26,7 @@ int main ()
         produceOutputFile3 (strBaseFileName, &graph);
         produceOutputFile4 (strBaseFileName, &graph);
         produceOutputFile5 (strBaseFileName, &graph, strStartVertex);
+        produceOutputFile6 (strBaseFileName, &graph, strStartVertex);
 
         freeAdjList(&graph);
     }
