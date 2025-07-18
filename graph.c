@@ -413,6 +413,7 @@ void produceOutputFile4 (String50 baseName, graphType *graph)
 }
 
 void BFS(graphType *graph, int startingIndex, String50 result[]) 
+
 {
     int visited[MAX_VERTICES];
     int queue[MAX_VERTICES];
@@ -478,6 +479,47 @@ void BFS(graphType *graph, int startingIndex, String50 result[])
     }
 }
 
+void DFS (graphType *graph, int previousIndex, String50 result[], int visited[], int* resultsCtr) 
+{
+    int i, minIdx, temp, j;
+    int candidates[MAX_VERTICES];
+    int candidateCtr = 0;
+    
+    visited[previousIndex] = 1;
+    strcpy(result[*resultsCtr], graph->vertices[previousIndex]);
+    (*resultsCtr)++;
+
+    for (i = 0; i < graph->nVertices; i++) {
+        if (graph->adjMatrix[previousIndex][i] && !visited[i]) {
+            candidates[candidateCtr] = previousIndex;
+            candidateCtr++; 
+        }
+    }
+
+    for (i = 0; i < candidateCtr - 1; i++) {
+        minIdx = i;
+        for (j = i + 1; j < candidateCtr; j++) 
+        {
+            if (strcmp(graph->vertices[candidates[j]], graph->vertices[candidates[minIdx]]) < 0) 
+            {
+                 minIdx = j;
+            }
+        }
+
+        if (minIdx != i) {
+            temp = candidates[i];
+            candidates[i] = candidates[minIdx];
+            candidates[minIdx] = temp;
+        }
+    }
+
+    for (i = 0; i < candidateCtr; i++) {
+        if (!visited[candidates[i]]) {
+            DFS(graph, candidates[i], result, visited, resultsCtr);
+        }
+    }
+}
+
 void produceOutputFile5 (String50 baseName, graphType *graph, String50 start) 
 {
     FILE *fp;
@@ -533,7 +575,7 @@ void produceOutputFile6 (String50 baseName, graphType *graph, String50 start)
     int nVisited[MAX_VERTICES];
 
     strcpy(outputName, baseName);
-    getOutputFileName(outputName,"-BFS");
+    getOutputFileName(outputName,"-DFS");
     startingIdx = findVertexIdx(graph, start);
 
     fp = fopen(outputName,"w");
@@ -554,17 +596,17 @@ void produceOutputFile6 (String50 baseName, graphType *graph, String50 start)
             nVisited[i] = 0;
         }
 
-        DFS (graph, staringIdx, result, nVisited, &nResultsCtr);
+        DFS (graph, startingIdx, result, nVisited, &nResultsCtr);
 
         for (i = 0; i < nResultsCtr; i++)
         {
-            fprintf(fp, "%s", result[i]);
+            fprintf(stdout, "%s", result[i]);
 
             if (i < nResultsCtr - 1)
-                fprintf(fp," ");
+                fprintf(stdout, " ");
         }
 
-        fprintf(fp,"\n");
+        fprintf(stdout,"\n");
     }
 
     fclose (fp);
