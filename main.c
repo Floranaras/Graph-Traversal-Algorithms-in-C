@@ -1,5 +1,11 @@
 #include "graph.c"
 
+/*
+    Prompts the user for a graph input file and a starting vertex for DFS AND BFS.
+    File name input is used to know which file to read from.
+    @return int Returns 0 when execution completes.
+*/
+
 int main ()
 {
     graphType graph;

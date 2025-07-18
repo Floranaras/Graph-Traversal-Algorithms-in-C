@@ -2,9 +2,18 @@
 #include <string.h>
 #include <stdlib.h>
 
+/*
+    Macro definition to be used in arrays that store information relating to vertices label.
+*/
 #define MAX_VERTICES (20)
+/*
+    Macro definition to specify that any strings can have up to max of 50 characters.
+*/
 #define MAX_STR (51)
 
+/*
+    Alias for strings holding up to 50 characters excluding null byte.
+*/
 typedef char String50[MAX_STR];
 
 struct adjNode 
