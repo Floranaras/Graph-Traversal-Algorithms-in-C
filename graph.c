@@ -491,7 +491,7 @@ void DFS (graphType *graph, int previousIndex, String50 result[], int visited[],
 
     for (i = 0; i < graph->nVertices; i++) {
         if (graph->adjMatrix[previousIndex][i] && !visited[i]) {
-            candidates[candidateCtr] = previousIndex;
+            candidates[candidateCtr] = i;
             candidateCtr++; 
         }
     }
@@ -571,7 +571,7 @@ void produceOutputFile6 (String50 baseName, graphType *graph, String50 start)
     String50 result[MAX_VERTICES];
     int i;
     int startingIdx;
-    int nResultsCtr;
+    int nResultsCtr = 0;
     int nVisited[MAX_VERTICES];
 
     strcpy(outputName, baseName);
@@ -600,13 +600,13 @@ void produceOutputFile6 (String50 baseName, graphType *graph, String50 start)
 
         for (i = 0; i < nResultsCtr; i++)
         {
-            fprintf(stdout, "%s", result[i]);
+            fprintf(fp, "%s", result[i]);
 
             if (i < nResultsCtr - 1)
-                fprintf(stdout, " ");
+                fprintf(fp, " ");
         }
 
-        fprintf(stdout,"\n");
+        fprintf(fp,"\n");
     }
 
     fclose (fp);
