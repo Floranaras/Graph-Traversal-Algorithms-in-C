@@ -1,3 +1,13 @@
+/*
+@file main.c
+@Driver file for graph traversal and output file creation
+@author RANARA, Ramil Carlos, SIA, Justin Michael, TIU, Avram Nathaniel - Programmer
+@date 7/22/2025
+@version 1.0
+*/
+
+
+
 #include "graph.c"
 
 /* 

@@ -1,3 +1,13 @@
+/**
+ * @file graph.c
+ * @brief Implementation of graph representations and traversals
+ * @author RANARA, Ramil Carlos, SIA, Justin Michael, TIU, Avram Nathaniel - Programmer
+ * @date 7/22/2025 
+ * @version 1.0
+ */
+
+
+
 #include "graph.h"
 
 /*
@@ -428,6 +438,17 @@ void printVertexAdjacencyList(FILE* fp, String50 vertex, String50 adjVertices[],
     }
 }
 
+/*
+    Purpose: To create/write an output file that lists a graph's vertices and their degrees
+    Returns: void
+    @param baseName The name of the graph
+    @param graph The pointer to a graph structure
+    Pre-condition:
+    - graph must be initialized prior to calling this function
+    - baseName must contain at least one character
+    Post-condition:
+    - the output file is created with the details about the vertices and their degrees
+*/
 void produceOutputFile2 (String50 baseName, graphType *graph)
 {
     FILE *fp;
@@ -464,6 +485,18 @@ void produceOutputFile2 (String50 baseName, graphType *graph)
     }
 }
 
+/*
+    Purpose: To create/write an output file that visualizes
+             an adjacency list representation of a graph
+    Returns: void
+    @param baseName The name of the graph
+    @param graph The pointer to a graph structure
+    Pre-condition:
+    - graph must be initialized prior to calling this function
+    - baseName must contain at least one character
+    Post-condition:
+    - the output file is created with a representation of the adjacency list of a graph
+*/
 void produceOutputFile3 (String50 baseName, graphType *graph)
 {
     FILE *fp;
@@ -501,6 +534,18 @@ void produceOutputFile3 (String50 baseName, graphType *graph)
     }
 }
 
+/*
+    Purpose: To create/write an output file that visualizes
+             an adjacency matrix representation of a graph
+    Returns: void
+    @param baseName The name of the graph
+    @param graph The pointer to a graph structure
+    Pre-condition:
+    - graph must be initialized prior to calling this function
+    - baseName must contain at least one character
+    Post-condition:
+    - the output file is created with a representation of the adjacency matrix of a graph
+*/
 void produceOutputFile4 (String50 baseName, graphType *graph) 
 {
     FILE *fp;
@@ -535,6 +580,20 @@ void produceOutputFile4 (String50 baseName, graphType *graph)
     fclose(fp);
 }
 
+/*
+    Purpose: To traverse a graph at a given index using the Breadth First
+             Search Algorithm (BFS) then storing the results in an array
+    Returns: void
+    @param graph The pointer to a graph structure
+    @param startingIndex The integer indicating the first vertex to be visited
+    @param result[] An array of Strings that represents the order
+                    in which the vertices were visited
+    Pre-condition:
+    - graph must be initialized prior to calling this function
+    - startingIndex must be greater than -1
+    Post-condition:
+    - result[] contains the vertices in the order they were visited
+*/
 void BFS(graphType *graph, int startingIndex, String50 result[]) 
 
 {
@@ -602,6 +661,27 @@ void BFS(graphType *graph, int startingIndex, String50 result[])
     }
 }
 
+/*
+    Purpose: To traverse a graph at a given index using the Depth First
+             Search Algorithm (DFS) then storing the results in an array
+    Returns: void
+    @param graph The pointer to a graph structure
+    @param previousIndex The integer indicating the vertex to be visited
+    @param result[] An array of Strings that represents the order
+                    in which the vertices were visited
+    @param visited[] An array of integers that indicates
+                     which vertices have been visited
+    @param resultCtr An integer pointer that represents
+                     the number of elements in result[]
+    Pre-condition:
+    - graph must be initialized prior to calling this function
+    - previousIndex must be greater than -1
+    - *resultsCtr must be greater than -1
+    - all of the contents of visited[] must be
+      initialized to 0 at first function call
+    Post-condition:
+    - result[] contains the vertices in the order they were visited
+*/
 void DFS (graphType *graph, int previousIndex, String50 result[], int visited[], int* resultsCtr) 
 {
     int i, minIdx, temp, j;
@@ -643,6 +723,20 @@ void DFS (graphType *graph, int previousIndex, String50 result[], int visited[],
     }
 }
 
+/*
+    Purpose: To create/write an output file that prints the
+             traversal order of a graph using Breadth First Search (BFS)
+    Returns: void
+    @param baseName The name of the graph
+    @param graph The pointer to a graph structure
+    @param start The String representing the name of the starting vertex
+    Pre-condition:
+    - graph must be initialized prior to calling this function
+    - baseName must contain at least one character
+    Post-condition:
+    - the output file is created with the list of vertices visited
+      displayed following a BFS traversal of the graph
+*/
 void produceOutputFile5 (String50 baseName, graphType *graph, String50 start) 
 {
     FILE *fp;
@@ -687,6 +781,20 @@ void produceOutputFile5 (String50 baseName, graphType *graph, String50 start)
     }
 }
 
+/*
+    Purpose: To create/write an output file that prints the
+             traversal order of a graph using Depth First Search (DFS)
+    Returns: void
+    @param baseName The name of the graph
+    @param graph The pointer to a graph structure
+    @param start The String representing the name of the starting vertex
+    Pre-condition:
+    - graph must be initialized prior to calling this function
+    - baseName must contain at least one character
+    Post-condition:
+    - the output file is created with the list of vertices visited
+      displayed following a DFS traversal of the graph
+*/
 void produceOutputFile6 (String50 baseName, graphType *graph, String50 start)
 {
     FILE *fp;

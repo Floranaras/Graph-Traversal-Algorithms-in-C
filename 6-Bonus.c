@@ -1,5 +1,24 @@
+/*
+@file 6-BONUS.c
+@Driver file for subgraph determinination
+@author RANARA, Ramil Carlos, SIA, Justin Michael, TIU, Avram Nathaniel - Programmer
+@date 7/22/2025
+@version 1.0
+*/
+
+
+
 #include "graph.c"
 
+/*
+    Purpose: To remove the file extension from a file's name
+    Returns: void
+    @param fileName The file name with a file extension
+    Pre-condition:
+    - A string of length 50 or less must be provided
+    Post-condition:
+    - File extension is removed from the file name
+*/
 void removeFileExtension(String50 fileName)
 {
     int i = 0;
@@ -10,6 +29,17 @@ void removeFileExtension(String50 fileName)
         fileName[i] = '\0';
 }
 
+/*
+    Purpose: To create the name of the output file with a file extension
+    Returns: void
+    @param outputName The file name with the file extension
+    @param baseG The file name of the first graph
+    @param baseH The file name of the second graph
+    Pre-condition:
+    - outputName, baseG, and baseH must be nonempty and have a length of 50 or less
+    Post-condition:
+    - outputName contains the file name of the output file with file extension
+*/
 void createOutputFileName(String50 outputName, String50 baseG, String50 baseH)
 {
     strcpy(outputName, baseG);
@@ -18,6 +48,16 @@ void createOutputFileName(String50 outputName, String50 baseG, String50 baseH)
     strcat(outputName, "-SUBGRAPH.TXT");
 }
 
+/*
+    Purpose: To sort an array of integers that correspond to the indices of a graph's vertices
+    Returns: void
+    @param graph The pointer to a graph structure
+    @param sortedIndices The pointer to an integer array
+    Pre-condition:
+    - graph must be initialized prior to calling this function
+    Post-condition:
+    - sortedIndices contains the sorted array of indices
+*/
 void sortVerticesAlphabetically(graphType* graph, int* sortedIndices)
 {
     int i, j, temp;
@@ -39,6 +79,20 @@ void sortVerticesAlphabetically(graphType* graph, int* sortedIndices)
     }
 }
 
+/*
+    Purpose: To write on a file if a vertex in the second graph exists in the first graph or not
+    Returns: void
+    @param File The pointer to a file
+    @param graphG The pointer to the first graph
+    @param graphH The pointer to the second graph
+    @param sortedIndices The pointer to an integer array
+    Pre-condition:
+    - sortedIndices must be sorted prior to calling this function
+    - graphG and graphH must be initialized prior to calling this function
+    Post-condition:
+    - file will be updated with the vertices of the second graph
+      and their statuses of being included in the first graph
+*/
 void writeVerticesStatus(FILE* file, graphType* graphG, graphType* graphH, int* sortedIndices)
 {
     int i, vertexFound;
@@ -54,6 +108,20 @@ void writeVerticesStatus(FILE* file, graphType* graphG, graphType* graphH, int* 
     }
 }
 
+/*
+    Purpose: To write on a file if an edge in the second graph exists in the first graph or not
+    Returns: void
+    @param File The pointer to a file
+    @param graphG The pointer to the first graph
+    @param graphH The pointer to the second graph
+    @param sortedIndices The pointer to an integer array
+    Pre-condition:
+    - sortedIndices must be sorted prior to calling this function
+    - graphG and graphH must be initialized prior to calling this function
+    Post-condition:
+    - file will be updated with the edges of the second graph 
+      and their statuses of being included in the first graph
+*/
 void writeEdgesStatus(FILE* file, graphType* graphG, graphType* graphH, int* sortedIndices)
 {
     int i, j, idx1, idx2, gIndex1, gIndex2, edgeFound;
@@ -92,6 +160,20 @@ void writeEdgesStatus(FILE* file, graphType* graphG, graphType* graphH, int* sor
     }
 }
 
+/*
+    Purpose: To write on a file if an edge in the second graph exists in the first graph or not
+    Returns: void
+    @param File The pointer to a file
+    @param graphG The pointer to the first graph
+    @param graphH The pointer to the second graph
+    @param sortedIndices The pointer to an integer array
+    Pre-condition:
+    - sortedIndices must be sorted prior to calling this function
+    - graphG and graphH must be initialized prior to calling this function
+    Post-condition:
+    - file will be updated with the edges of the second graph 
+      and their statuses of being included in the first graph
+*/
 int allVerticesExist(graphType* pGraphG, graphType* pGraphH)
 {
     int i, j, nVertexFound;
@@ -110,6 +192,17 @@ int allVerticesExist(graphType* pGraphG, graphType* pGraphH)
     return 1;
 }
 
+/*
+    Purpose: Determines if all edges in graph H exist in graph G
+    Returns: 1 if all edges within graph H are also present in graph G, 0 otherwise
+    @param pGraphG The pointer to the first graph
+    @param pGraphH The pointer to the second graph
+    Pre-condition:
+    - pGraphG and pGraphH must be initialized prior to calling this function
+    Post-condition:
+    - 1 will be returned if all edges in graph H also exist in graph G
+      0 will be returned if one or more edges in graph H don't exist in graph G
+*/
 int allEdgesExist(graphType* pGraphG, graphType* pGraphH)
 {
     int nHIndex1, nHIndex2, nGIndex1, nGIndex2;
@@ -133,6 +226,17 @@ int allEdgesExist(graphType* pGraphG, graphType* pGraphH)
     return 1;
 }
 
+/*
+    Purpose: Determines if graph H is a subgraph of graph G
+    Returns: void
+    @param pGraphG The pointer to the first graph
+    @param pGraphH The pointer to the second graph
+    @param pIsSubgraph The pointer to an integer that indicates if H is a subgraph of G
+    Pre-condition:
+    - pGraphG and pGraphH must be initialized prior to calling this function
+    Post-condition:
+    - pIsSubgraph gains a value of 1 if H is a subgraph of G or a value of 0 otherwise
+*/
 void checkIsSubgraph(graphType* pGraphG, graphType* pGraphH, int* pIsSubgraph)
 {
     int nAllVerticesFound, nAllEdgesFound;
@@ -150,6 +254,19 @@ void checkIsSubgraph(graphType* pGraphG, graphType* pGraphH, int* pIsSubgraph)
         *pIsSubgraph = 0;
 }
 
+/*
+    Purpose: To write on a file if a graph is a subgraph of another graph
+    Returns: void
+    @param File The pointer to a file
+    @param strBaseG The name of the first graph
+    @param strBaseH The name of the second graph
+    @param nIsSubgraph The integer that indicates if the first graph is a subgraph of the second graph
+    Pre-condition:
+    - nIsSubgraph must have a value of either 1 or 0
+    Post-condition:
+    - pFile will be updated with the conclusion of the first graph
+      being or not being a subgraph of the second graph
+*/
 void writeSubgraphConclusion(FILE* pFile, String50 strBaseG, String50 strBaseH, int nIsSubgraph)
 {
     if (nIsSubgraph == 1)
@@ -162,6 +279,19 @@ void writeSubgraphConclusion(FILE* pFile, String50 strBaseG, String50 strBaseH, 
     }
 }
 
+/*
+    Purpose: To create/write the output file
+    Returns: void
+    @param strFileG The file name of the first graph with file extension
+    @param strFileH The file name of the second graph with file extension
+    @param pGraphG The pointer to the first graph
+    @param pGraphH The pointer to the second graph
+    Pre-condition:
+    - pGraphG and pGraphH must be initialized prior to calling this function
+    Post-condition:
+    - the output file is created with the corresponding details about 
+      the vertices, edges, statuses, and conclusion
+*/
 void produceSubgraphOutput(String50 strFileG, String50 strFileH, graphType* pGraphG, graphType* pGraphH)
 {
     FILE* pFile;
@@ -191,6 +321,18 @@ void produceSubgraphOutput(String50 strFileG, String50 strFileH, graphType* pGra
     }
 }
 
+/*
+    Purpose: To read the files of both graphs and get their respective details
+    Returns: 1 if both files were successfully read, 0 otherwise
+    @param strFileG The file name of the first graph with file extension
+    @param strFileH The file name of the second graph with file extension
+    @param graphG The pointer to the first graph
+    @param graphH The pointer to the second graph
+    Pre-condition: 
+    - none
+    Post-condition:
+    - graphG and graphH are initialized with the contents read from their respective files
+*/
 int readBothGraphFiles(String50 strFileG, String50 strFileH, graphType* graphG, graphType* graphH)
 {
     int nFileSuccessG, nFileSuccessH;
@@ -212,6 +354,16 @@ int readBothGraphFiles(String50 strFileG, String50 strFileH, graphType* graphG, 
     return 1;
 }
 
+/*
+    Purpose: To get the file names of the two graphs to be used
+    Returns: void
+    @param strFileG The file name of the first graph with file extension
+    @param strFileH The file name of the second graph with file extension
+    Pre-condition:
+    - none
+    Post-condition:
+    - strFileG and strFileH contain the file names of graphs G and H respectively
+*/
 void getInputFilenames(String50 strFileG, String50 strFileH)
 {
     printf("Input first graph filename: ");
@@ -221,6 +373,11 @@ void getInputFilenames(String50 strFileG, String50 strFileH)
     scanf("%s", strFileH);
 }
 
+/*
+    Purpose: To read the files of two graphs, determine if the program continues,
+             find out if one graph is a subgraph of the other, and produce an output file.
+    Returns: 0 on exit
+*/
 int main()
 {
     graphType graphG, graphH;
