@@ -1,5 +1,9 @@
 #include "graph.c"
 
+/* 
+    Purpose: Calls the functions for graph construction and producing output.
+    Returns: 0 for program termination
+*/
 int main ()
 {
     graphType graph;
