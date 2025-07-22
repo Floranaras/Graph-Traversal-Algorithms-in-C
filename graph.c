@@ -1,5 +1,15 @@
 #include "graph.h"
 
+/*
+    Purpose: Gets the name of the file without extension from user input and copy into baseName
+    Returns: void
+    @param baseName: String for holding the file name without extension
+    @param inputName: String holding the input from user
+    Pre-condition:
+    - inputName must exist in same folder directory as program
+    Post-condition:
+    - baseName will now contain the name without file extension
+*/
 void getBaseFileName (String50 baseName, String50 inputName)
 {
     int j = 0;
@@ -13,6 +23,15 @@ void getBaseFileName (String50 baseName, String50 inputName)
     baseName[j] = '\0';
 }
 
+/*
+    Purpose: Initialize the adjacency representations of the graph data structure
+    Returns: void
+    @param matrix: Matrix representing the adjacency matrix representation of graph data structure
+    @param list: Holds the count for the number of edges per vertice
+    Post-condition:
+    - Matrix indexes now all initialized to zero
+    - All indexes now initialized to zero
+*/
 void initRep (int matrix[][MAX_VERTICES], int *list, int size)
 {
     int i, j;
@@ -27,6 +46,11 @@ void initRep (int matrix[][MAX_VERTICES], int *list, int size)
     }
 }
 
+/*
+    Purpose: Creates a new node and set vertex as label of new node
+    Returns: Pointer to the newly created node
+    @param vertex: Label of the new node
+*/
 adjNode* createNode (String50 vertex)
 {
     adjNode* newNode = (adjNode*)malloc(sizeof(adjNode));
@@ -40,6 +64,17 @@ adjNode* createNode (String50 vertex)
     return newNode;
 }
 
+/*
+    Purpose: Adds a new node into the adjacency list representation
+    Returns: void
+    @param graph: Pointer to graph data structure
+    @param vertexIdx: Current end of adjacency list
+    @param adjVertex: Vertex label of new node to be added into the list
+    Pre-condition:
+    - vertexIdx must be within the range of the adjacency list array
+    Post-condition:
+    - adjList member in graph will now have a new node included
+*/
 void addToAdjList(graphType *graph, int vertexIdx, String50 adjVertex)
 {
     adjNode* newNode;
@@ -66,6 +101,13 @@ void addToAdjList(graphType *graph, int vertexIdx, String50 adjVertex)
     }
 }
 
+/*
+    Purpose: Removes every node in the adjacency list
+    Returns: void
+    @param graph: Struct for graph data structure
+    Post-condition:
+    - All nodes in graph member adjList are removed
+*/
 void freeAdjList(graphType *graph)
 {
     int i;
@@ -88,6 +130,14 @@ void freeAdjList(graphType *graph)
     }
 }
 
+/*
+    Purpose: Searches through the known vertex labels in the graph and return the index of the target label
+    Returns: Index of target label, -1 if not found
+    @param graph: Struct for graph data structure
+    @param strVertex: String of target vertex label
+    Pre-condition:
+    - strVertex must be initialized
+*/
 int findVertexIdx (graphType *graph, String50 strVertex)
 {
     int i;
@@ -104,6 +154,13 @@ int findVertexIdx (graphType *graph, String50 strVertex)
     return idx;
 }
 
+/*
+    Purpose: Gets the name of the file without extension from user input and copy into baseName
+    Returns: void
+    @param graph: Struct for graph data structure
+    Post-condition:
+    - adjMatrix member in graph will now have the complete adjacency matrix representation of the graph data structure
+*/
 void makeAdjMatrix (graphType *graph)
 {
     int i, j;
@@ -136,6 +193,16 @@ void makeAdjMatrix (graphType *graph)
     }
 }
 
+/*
+    Purpose: Reads information from input file and add to the graph data structure
+    Returns: 1 indicating a successful read, 0 otherwise
+    @param strInputFileName: String of the input file name to read the graph information from
+    @param graph: Struct for graph data structure
+    Pre-condition:
+    - strInputFileName must be initialized
+    Post-condition:
+    - graph will now be updated with the information from the input file
+*/
 int readInputFile (String50 strInputFileName, graphType *graph)
 {
     FILE *pFile;
@@ -180,12 +247,30 @@ int readInputFile (String50 strInputFileName, graphType *graph)
     return nSuccess;
 }
 
+/*
+    Purpose: Sets the name of the output text file.
+    Returns: void
+    @param baseName: String for holding the file name without extension
+    @param suffix: The suffix associated with the type of output file
+    Pre-condition:
+    - Both baseName and suffix must be initialized
+*/
 void getOutputFileName (String50 baseName, char *suffix)
 {
     strcat(baseName, suffix);
     strcat(baseName,".TXT");
 }
 
+/*
+    Purpose: Swaps the information contained between two int variables
+    Returns: void
+    @param num1: Variable holding the first value
+    @param num2: Variable holding the second value
+    Pre-condition:
+    - num1 and num2 must both be initialized
+    Post-condition:
+    - num1 and num2 now have swapped values
+*/
 void swapNums (int *num1, int *num2)
 {
     int temp;
@@ -195,6 +280,14 @@ void swapNums (int *num1, int *num2)
     *num2 = temp;
 }
 
+/*
+    Purpose: Sorts the index of the vertices in the graph by value of the label of each node into idx
+    Returns: void
+    @param graph: Struct for graph data structure
+    @param idx: Holds the sorted vertex indexes
+    Post-condition:
+    - idx now has the sorted indexes of the vertices
+*/
 void sortVertices (graphType* graph, int *idx)
 {
     int i, j;
@@ -214,7 +307,14 @@ void sortVertices (graphType* graph, int *idx)
     }
 }
 
-
+/*
+    Purpose: Prepares the output file of list of vertices and edges in the graph
+    Returns: void
+    @param baseName: String for holding the file name without extension
+    @param graph: Struct for graph data structure
+    Pre-condition:
+    - baseName must be initialized
+*/
 void produceOutputFile1 (String50 baseName, graphType *graph)
 {
     FILE *fp;
@@ -273,6 +373,16 @@ void produceOutputFile1 (String50 baseName, graphType *graph)
     }
 }
 
+/*
+    Purpose: Finds the adjacent vertexes of a node and add into adjVertices
+    Returns: Count of adjacent vertexes to a node
+    @param adjList: Adjacency list representation of the graph
+    @param adjVertices: Holds adjacent vertices of each node
+    Pre-condition:
+    - adjList must be initialized
+    Post-condition:
+    - adjVertices now holds the vertexes adjacent to a node
+*/
 int collectAdjacentVertices(adjNode* adjList, String50 adjVertices[])
 {
     adjNode* current;
@@ -289,6 +399,19 @@ int collectAdjacentVertices(adjNode* adjList, String50 adjVertices[])
     return adjCount;
 }
 
+/*
+    Purpose: Print the adjacency list of a node
+    Returns: void
+    @param fp: File pointer to output file
+    @param vertex: Label of the node's adjacency list
+    @param adjVertices: Holds the labels adjacent to a node
+    @param adjCount: Number of vertexes adjacent to a node
+    Pre-condition:
+    - fp must not be null
+    - vertex is initialized
+    - adjCount is initialized
+    - Strings in adjVertices are initialized
+*/
 void printVertexAdjacencyList(FILE* fp, String50 vertex, String50 adjVertices[], int adjCount)
 {
     int j;
