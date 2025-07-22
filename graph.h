@@ -2,19 +2,24 @@
 #include <string.h>
 #include <stdlib.h>
 
+/* Constant for static arrays involved with vertices */
 #define MAX_VERTICES (20)
+
+/* Constant for string arrays */
 #define MAX_STR (51)
 
 typedef char String50[MAX_STR];
 
+/* Struct for linked list implementation of graph data structure */
 struct adjNode 
 {
     String50 vertex;
     struct adjNode* next;
 };
-
+/* Alias to allow to refer to a vertice node via "adjNode" */
 typedef struct adjNode adjNode;
 
+/* Struct containing the necessary members for the graph data structure */
 struct graphTag
 {
     String50 vertices[MAX_VERTICES];
@@ -23,7 +28,7 @@ struct graphTag
     adjNode *adjList[MAX_VERTICES];
     int adjCount[MAX_VERTICES];
 };
-
+/* Alias for struct graphTag */
 typedef struct graphTag graphType;
 
 /* Function Prototypes */
