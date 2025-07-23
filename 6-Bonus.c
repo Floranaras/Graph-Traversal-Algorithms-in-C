@@ -193,6 +193,39 @@ int allVerticesExist(graphType* pGraphG, graphType* pGraphH)
 }
 
 /*
+    Purpose: Checks if a specific edge from graph H exists in graph G
+    Returns: 1 if the edge exists in graph G or no edge exists in graph H, 0 otherwise
+    @param pGraphG The pointer to the first graph
+    @param pGraphH The pointer to the second graph
+    @param nHIndex1 The first vertex index in graph H
+    @param nHIndex2 The second vertex index in graph H
+    Pre-condition:
+    - pGraphG and pGraphH must be initialized prior to calling this function
+    - nHIndex1 and nHIndex2 must be valid indices within graph H
+    Post-condition:
+    - 1 will be returned if no edge exists between vertices at nHIndex1 and nHIndex2 in graph H
+      or if the edge exists in both graphs
+    - 0 will be returned if the edge exists in graph H but not in graph G
+*/
+int checkEdgeExists(graphType* pGraphG, graphType* pGraphH, int nHIndex1, int nHIndex2)
+{
+    int nGIndex1, nGIndex2;
+    
+    if (pGraphH->adjMatrix[nHIndex1][nHIndex2] != 1)
+        return 1;  
+        
+    nGIndex1 = findVertexIdx(pGraphG, pGraphH->vertices[nHIndex1]);
+    nGIndex2 = findVertexIdx(pGraphG, pGraphH->vertices[nHIndex2]);
+    
+    if (nGIndex1 == -1 || nGIndex2 == -1)
+        return 0;
+    if (pGraphG->adjMatrix[nGIndex1][nGIndex2] == 0)
+        return 0;
+        
+    return 1;
+}
+
+/*
     Purpose: Determines if all edges in graph H exist in graph G
     Returns: 1 if all edges within graph H are also present in graph G, 0 otherwise
     @param pGraphG The pointer to the first graph
@@ -205,25 +238,21 @@ int allVerticesExist(graphType* pGraphG, graphType* pGraphH)
 */
 int allEdgesExist(graphType* pGraphG, graphType* pGraphH)
 {
-    int nHIndex1, nHIndex2, nGIndex1, nGIndex2;
+    int nHIndex1, nHIndex2;
+	int allExist = 1;
     
-    for (nHIndex1 = 0; nHIndex1 < pGraphH->nVertices; nHIndex1++) 
+    for (nHIndex1 = 0; nHIndex1 < pGraphH->nVertices && allExist; nHIndex1++) 
     {
-        for (nHIndex2 = 0; nHIndex2 < pGraphH->nVertices; nHIndex2++) 
+        for (nHIndex2 = 0; nHIndex2 < pGraphH->nVertices && allExist; nHIndex2++) 
         {
             if (pGraphH->adjMatrix[nHIndex1][nHIndex2] == 1)
             {
-                nGIndex1 = findVertexIdx(pGraphG, pGraphH->vertices[nHIndex1]);
-                nGIndex2 = findVertexIdx(pGraphG, pGraphH->vertices[nHIndex2]);
-                
-                if (nGIndex1 == -1 || nGIndex2 == -1)
-                    return 0;
-                if (pGraphG->adjMatrix[nGIndex1][nGIndex2] == 0) 
-                    return 0;
+				if (!checkEdgeExists (pGraphG, pGraphH,nHIndex1, nHIndex2))
+					allExist = 0;
             }
         }
     }
-    return 1;
+    return allExist;
 }
 
 /*
