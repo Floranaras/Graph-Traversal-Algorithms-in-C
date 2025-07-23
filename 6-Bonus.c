@@ -304,7 +304,7 @@ void writeSubgraphConclusion(FILE* pFile, String50 strBaseG, String50 strBaseH, 
     }
     else
     {
-        fprintf(pFile, "%s is a not subgraph of %s.\n", strBaseH, strBaseG);
+        fprintf(pFile, "%s is not subgraph of %s.\n", strBaseH, strBaseG);
     }
 }
 
