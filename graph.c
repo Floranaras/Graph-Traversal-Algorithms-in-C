@@ -436,11 +436,14 @@ void printVertexAdjacencyList(FILE *fp, String50 vertex, String50 adjVertices[],
 	// Print all vertices with an edge to the first vertex
 	for (j = 0; j < adjCount; j++) 
 	{
-		fprintf(fp, "%s->", adjVertices[j]);
+		fprintf(fp, "%s", adjVertices[j]);
 
-		if (j == (adjCount - 1))
-			fprintf(fp, "\\");
+		if (j < (adjCount - 1))
+			fprintf(fp, "->");
+
 	}
+
+	fprintf(fp, "\\");
 }
 
 /*
@@ -786,7 +789,11 @@ void produceOutputFile5(String50 baseName, graphType *graph, String50 start)
 	} 
 
 	else 
-{
+	{
+		for (i = 0; i < graph->nVertices; i++) {
+			strcpy(result[i], "\0");
+		}
+
 		BFS(graph, startingIdx, result);
 
 		for (i = 0; i < graph->nVertices; i++) 
