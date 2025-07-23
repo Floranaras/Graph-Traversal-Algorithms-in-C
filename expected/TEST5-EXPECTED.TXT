@@ -1,0 +1,31 @@
+# TEST5-SET.TXT
+V(G)={Alice,Bob,Carol,David,Eve}
+E(G)={(Alice,Bob),(Alice,Carol),(Bob,David),(Carol,Eve),(David,Eve)}
+
+# TEST5-DEGREE.TXT
+Alice 2
+Bob 2
+Carol 2
+David 2
+Eve 2
+
+# TEST5-LIST.TXT
+Alice->Bob->Carol->\
+Bob->Alice->David->\
+Carol->Alice->Eve->\
+David->Bob->Eve->\
+Eve->Carol->David->\
+
+# TEST5-MATRIX.TXT
+ Alice Bob Carol David Eve
+Alice 0 1 1 0 0
+Bob 1 0 0 1 0
+Carol 1 0 0 0 1
+David 0 1 0 0 1
+Eve 0 0 1 1 0
+
+# TEST5-BFS.TXT (starting from Alice)
+Alice Bob Carol David Eve
+
+# TEST5-DFS.TXT (starting from Alice)
+Alice Bob David Eve Carol

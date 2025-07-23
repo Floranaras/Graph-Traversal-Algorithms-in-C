@@ -1,0 +1,34 @@
+# ISOLATED-SET.TXT
+V(G)={Alice,Bob,Carol,David,Eve,Frank}
+E(G)={(Alice,Bob),(Bob,Carol)}
+
+# ISOLATED-DEGREE.TXT
+Alice 1
+Bob 2
+Carol 1
+David 0
+Eve 0
+Frank 0
+
+# ISOLATED-LIST.TXT
+Alice->Bob->\
+Bob->Alice->Carol->\
+Carol->Bob->\
+David->\
+Eve->\
+Frank->\
+
+# ISOLATED-MATRIX.TXT
+ Alice Bob Carol David Eve Frank
+Alice 0 1 0 0 0 0
+Bob 1 0 1 0 0 0
+Carol 0 1 0 0 0 0
+David 0 0 0 0 0 0
+Eve 0 0 0 0 0 0
+Frank 0 0 0 0 0 0
+
+# ISOLATED-BFS.TXT (starting from Alice)
+Alice Bob Carol
+
+# ISOLATED-DFS.TXT (starting from Alice)
+Alice Bob Carol

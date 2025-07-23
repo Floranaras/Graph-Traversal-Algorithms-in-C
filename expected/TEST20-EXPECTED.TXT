@@ -1,0 +1,76 @@
+# TEST20-SET.TXT
+V(G)={Alice,Bob,Carol,David,Eve,Frank,Grace,Henry,Iris,Jack,Karen,Leo,Mary,Nancy,Oscar,Paul,Quinn,Rose,Sam,Tina}
+E(G)={(Alice,Bob),(Alice,Carol),(Bob,David),(Bob,Eve),(Carol,Frank),(David,Grace),(Eve,Henry),(Frank,Iris),(Grace,Jack),(Henry,Karen),(Iris,Leo),(Jack,Mary),(Karen,Nancy),(Leo,Oscar),(Mary,Paul),(Nancy,Quinn),(Oscar,Rose),(Paul,Sam),(Quinn,Tina)}
+
+# TEST20-DEGREE.TXT
+Alice 2
+Bob 3
+Carol 2
+David 2
+Eve 2
+Frank 2
+Grace 2
+Henry 2
+Iris 2
+Jack 2
+Karen 2
+Leo 2
+Mary 2
+Nancy 2
+Oscar 2
+Paul 2
+Quinn 2
+Rose 1
+Sam 1
+Tina 1
+
+# TEST20-LIST.TXT
+Alice->Bob->Carol->\
+Bob->Alice->David->Eve->\
+Carol->Alice->Frank->\
+David->Bob->Grace->\
+Eve->Bob->Henry->\
+Frank->Carol->Iris->\
+Grace->David->Jack->\
+Henry->Eve->Karen->\
+Iris->Frank->Leo->\
+Jack->Grace->Mary->\
+Karen->Henry->Nancy->\
+Leo->Iris->Oscar->\
+Mary->Jack->Paul->\
+Nancy->Karen->Quinn->\
+Oscar->Leo->Rose->\
+Paul->Mary->Sam->\
+Quinn->Nancy->Tina->\
+Rose->Oscar->\
+Sam->Paul->\
+Tina->Quinn->\
+
+# TEST20-MATRIX.TXT
+ Alice Bob Carol David Eve Frank Grace Henry Iris Jack Karen Leo Mary Nancy Oscar Paul Quinn Rose Sam Tina
+Alice 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+Bob 1 0 0 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+Carol 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+David 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
+Eve 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0
+Frank 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0
+Grace 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0
+Henry 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0
+Iris 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0
+Jack 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0
+Karen 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0
+Leo 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0
+Mary 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0
+Nancy 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0
+Oscar 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0
+Paul 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0
+Quinn 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1
+Rose 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0
+Sam 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0
+Tina 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0
+
+# TEST20-BFS.TXT (starting from Alice)
+Alice Bob Carol David Eve Frank Grace Henry Iris Jack Karen Leo Mary Nancy Oscar Paul Quinn Rose Sam Tina
+
+# TEST20-DFS.TXT (starting from Alice)
+Alice Bob David Grace Jack Mary Paul Sam Eve Henry Karen Nancy Quinn Tina Carol Frank Iris Leo Oscar Rose

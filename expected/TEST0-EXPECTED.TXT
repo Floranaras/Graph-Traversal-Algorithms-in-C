@@ -1,0 +1,28 @@
+# ZERO-SET.TXT
+V(G)={Alice,Bob,Carol,David}
+E(G)={}
+
+# ZERO-DEGREE.TXT
+Alice 0
+Bob 0
+Carol 0
+David 0
+
+# ZERO-LIST.TXT
+Alice->\
+Bob->\
+Carol->\
+David->\
+
+# ZERO-MATRIX.TXT
+ Alice Bob Carol David
+Alice 0 0 0 0
+Bob 0 0 0 0
+Carol 0 0 0 0
+David 0 0 0 0
+
+# ZERO-BFS.TXT (starting from Alice)
+Alice
+
+# ZERO-DFS.TXT (starting from Alice)
+Alice

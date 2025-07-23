@@ -1,0 +1,21 @@
+20
+Alice Bob Carol -1
+Bob Alice David Eve -1
+Carol Alice Frank -1
+David Bob Grace -1
+Eve Bob Henry -1
+Frank Carol Iris -1
+Grace David Jack -1
+Henry Eve Karen -1
+Iris Frank Leo -1
+Jack Grace Mary -1
+Karen Henry Nancy -1
+Leo Iris Oscar -1
+Mary Jack Paul -1
+Nancy Karen Quinn -1
+Oscar Leo Rose -1
+Paul Mary Sam -1
+Quinn Nancy Tina -1
+Rose Oscar -1
+Sam Paul -1
+Tina Quinn -1

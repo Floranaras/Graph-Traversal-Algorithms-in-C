@@ -1,0 +1,46 @@
+# TEST10-SET.TXT
+V(G)={Alice,Bob,Carol,David,Eve,Frank,Grace,Henry,Iris,Jack}
+E(G)={(Alice,Bob),(Alice,Frank),(Bob,Carol),(Bob,Grace),(Carol,David),(David,Eve),(David,Henry),(Eve,Frank),(Frank,Grace),(Grace,Henry),(Henry,Iris),(Iris,Jack)}
+
+# TEST10-DEGREE.TXT
+Alice 2
+Bob 3
+Carol 2
+David 3
+Eve 2
+Frank 3
+Grace 3
+Henry 3
+Iris 2
+Jack 1
+
+# TEST10-LIST.TXT
+Alice->Bob->Frank->\
+Bob->Alice->Carol->Grace->\
+Carol->Bob->David->\
+David->Carol->Eve->Henry->\
+Eve->David->Frank->\
+Frank->Alice->Eve->Grace->\
+Grace->Bob->Frank->Henry->\
+Henry->David->Grace->Iris->\
+Iris->Henry->Jack->\
+Jack->Iris->\
+
+# TEST10-MATRIX.TXT
+ Alice Bob Carol David Eve Frank Grace Henry Iris Jack
+Alice 0 1 0 0 0 1 0 0 0 0
+Bob 1 0 1 0 0 0 1 0 0 0
+Carol 0 1 0 1 0 0 0 0 0 0
+David 0 0 1 0 1 0 0 1 0 0
+Eve 0 0 0 1 0 1 0 0 0 0
+Frank 1 0 0 0 1 0 1 0 0 0
+Grace 0 1 0 0 0 1 0 1 0 0
+Henry 0 0 0 1 0 0 1 0 1 0
+Iris 0 0 0 0 0 0 0 1 0 1
+Jack 0 0 0 0 0 0 0 0 1 0
+
+# TEST10-BFS.TXT (starting from Alice)
+Alice Bob Frank Carol Grace Eve Henry David Iris Jack
+
+# TEST10-DFS.TXT (starting from Alice)
+Alice Bob Carol David Eve Frank Grace Henry Iris Jack

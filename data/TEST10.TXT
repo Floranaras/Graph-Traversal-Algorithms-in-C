@@ -1,0 +1,11 @@
+10
+Alice Bob Frank -1
+Bob Alice Carol Grace -1
+Carol Bob David -1
+David Carol Eve Henry -1
+Eve David Frank -1
+Frank Alice Eve Grace -1
+Grace Bob Frank Henry -1
+Henry David Grace Iris -1
+Iris Henry Jack -1
+Jack Iris -1

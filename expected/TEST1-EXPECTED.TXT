@@ -1,0 +1,19 @@
+# SINGLE-SET.TXT
+V(G)={Alice}
+E(G)={}
+
+# SINGLE-DEGREE.TXT
+Alice 0
+
+# SINGLE-LIST.TXT
+Alice->\
+
+# SINGLE-MATRIX.TXT
+ Alice
+Alice 0
+
+# SINGLE-BFS.TXT (starting from Alice)
+Alice
+
+# SINGLE-DFS.TXT (starting from Alice)
+Alice
