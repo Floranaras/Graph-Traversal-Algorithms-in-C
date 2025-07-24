@@ -1,4 +1,4 @@
-#include "graph.h"
+#include <01-BONUS.h>
 
 void checkIsSubgraph(graphType* pGraphG, graphType* pGraphH, int* pIsSubgraph)
 {

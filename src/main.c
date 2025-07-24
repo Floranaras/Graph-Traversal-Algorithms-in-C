@@ -1,5 +1,8 @@
 /* main.c */
-#include "graph.h"
+#include <head.h>
+#include <fileInput.h>
+#include <graph.h>
+#include <transversal.h>
 
 int main()
 {

@@ -1,30 +1,64 @@
 # Makefile for Graph Traversal Project
+
 CC = gcc
-CFLAGS = -Wall -std=c99
+CFLAGS = -Wall -std=c99 -Iinclude
 SRCDIR = src
 INCDIR = include
 OBJDIR = obj
 
-# Create obj directory if it doesn't exist
+# Source files for main and bonus
+SRCFILES = \
+	$(SRCDIR)/main.c \
+	$(SRCDIR)/graph.c \
+	$(SRCDIR)/fileInput.c \
+	$(SRCDIR)/transversal.c
+
+BONUS_SRC = \
+	$(SRCDIR)/01-BONUS.c \
+	$(SRCDIR)/graph.c \
+	$(SRCDIR)/fileInput.c \
+	$(SRCDIR)/transversal.c
+
+# Object file paths
+OBJS = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRCFILES))
+BONUS_OBJS = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(BONUS_SRC))
+
+# Create obj dir if needed
 $(shell mkdir -p $(OBJDIR))
+
+# Default
+all: main
 
 # Main program
 main: $(OBJDIR)/main
 	@echo "Main program compiled successfully in $(OBJDIR)/"
 
-$(OBJDIR)/main: $(SRCDIR)/main.c $(SRCDIR)/graph.c
-	$(CC) $(CFLAGS) -I$(INCDIR) $(SRCDIR)/main.c $(SRCDIR)/graph.c -o $(OBJDIR)/main
+$(OBJDIR)/main: $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
 
-# Bonus program - compiles and runs automatically
+# Bonus program
 bonus: $(OBJDIR)/bonus
 	@echo "Bonus program compiled successfully in $(OBJDIR)/"
 	@echo "Running bonus program from src/ directory..."
 	@cd $(SRCDIR) && ../$(OBJDIR)/bonus
 
-$(OBJDIR)/bonus: $(SRCDIR)/01-BONUS.c $(SRCDIR)/graph.c
-	$(CC) $(CFLAGS) -I$(INCDIR) $(SRCDIR)/01-BONUS.c $(SRCDIR)/graph.c -o $(OBJDIR)/bonus
+$(OBJDIR)/bonus: $(BONUS_OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
 
-# Clean target
+# Compile .c to .o
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Run targets
+run: main
+	@echo "Running main program from src/ directory..."
+	@cd $(SRCDIR) && ../$(OBJDIR)/main
+
+run-bonus: bonus
+	@echo "Running bonus program from src/ directory..."
+	@cd $(SRCDIR) && ../$(OBJDIR)/bonus
+
+# Clean
 clean:
 	rm -rf $(OBJDIR)
 	rm -f $(SRCDIR)/*-SET.TXT
@@ -34,28 +68,17 @@ clean:
 	rm -f $(SRCDIR)/*-BFS.TXT
 	rm -f $(SRCDIR)/*-DFS.TXT
 	rm -f $(SRCDIR)/*-SUBGRAPH.TXT
-	@echo "Cleaned all executables from $(OBJDIR)/"
-	@echo "Cleaned all generated output files from $(SRCDIR)/"
+	@echo "Cleaned all object files and outputs."
 
-
-# Run main program
-run: $(OBJDIR)/main
-	@echo "Running main program from src/ directory..."
-	@cd $(SRCDIR) && ../$(OBJDIR)/main
-
-# Run bonus program
-run-bonus: $(OBJDIR)/bonus
-	@echo "Running bonus program from src/ directory..."
-	@cd $(SRCDIR) && ../$(OBJDIR)/bonus
-
-# Help target
+# Help
 help:
 	@echo "Available targets:"
-	@echo "  main      - Compile main program to $(OBJDIR)/main"
-	@echo "  bonus     - Compile and automatically run bonus program"
-	@echo "  run       - Run the main program"
-	@echo "  run-bonus - Run the bonus program"
-	@echo "  clean     - Remove all executables from $(OBJDIR)/"
-	@echo "  help      - Show this help message"
+	@echo "  all        - Compile the main program (default)"
+	@echo "  main       - Compile main program"
+	@echo "  bonus      - Compile and run bonus program"
+	@echo "  run        - Run main program"
+	@echo "  run-bonus  - Run bonus program"
+	@echo "  clean      - Remove builds and output files"
+	@echo "  help       - Show help message"
 
-.PHONY: main bonus clean run run-bonus help
+.PHONY: all main bonus clean run run-bonus help
