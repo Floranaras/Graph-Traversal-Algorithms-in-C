@@ -1,0 +1,6 @@
+5
+Node1 Node2 -1
+Node2 Node1 -1
+Node3 Node4 -1
+Node4 Node3 Node5 -1
+Node5 Node4 -1

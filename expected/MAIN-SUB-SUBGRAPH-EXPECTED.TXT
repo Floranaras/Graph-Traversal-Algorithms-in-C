@@ -1,0 +1,4 @@
+Node3 +
+Node4 +
+(Node3,Node4) +
+SUB is a subgraph of MAIN.

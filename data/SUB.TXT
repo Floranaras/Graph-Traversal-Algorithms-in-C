@@ -1,0 +1,3 @@
+2
+Node3 Node4 -1
+Node4 Node3 -1

@@ -1,0 +1,2 @@
+Ben +
+N is a subgraph of M.
