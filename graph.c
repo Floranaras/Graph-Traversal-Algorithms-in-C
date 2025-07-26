@@ -194,7 +194,6 @@ void makeAdjMatrix(graphType *graph)
 			if (nAdjIdx != -1) 
 			{
 				graph->adjMatrix[i][nAdjIdx] = 1;
-				graph->adjMatrix[nAdjIdx][i] = 1;
 			}
 
 			current = current->next;
