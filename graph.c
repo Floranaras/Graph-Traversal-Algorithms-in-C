@@ -436,11 +436,7 @@ void printVertexAdjacencyList(FILE *fp, String50 vertex, String50 adjVertices[],
 	// Print all vertices with an edge to the first vertex
 	for (j = 0; j < adjCount; j++) 
 	{
-		fprintf(fp, "%s", adjVertices[j]);
-
-		if (j < (adjCount - 1))
-			fprintf(fp, "->");
-
+		fprintf(fp, "%s->", adjVertices[j]);
 	}
 
 	fprintf(fp, "\\");
@@ -535,9 +531,8 @@ void produceOutputFile3(String50 baseName, graphType *graph)
 
 			// Print adjacency list for this vertex
 			printVertexAdjacencyList(fp, graph->vertices[i], adjVertices, adjCount);
-
-			if (i < (graph->nVertices - 1))
-				fprintf(fp, "\n");
+				
+			fprintf(fp, "\n");
 		}
 
 		// Close output file
