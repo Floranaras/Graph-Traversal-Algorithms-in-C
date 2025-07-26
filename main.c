@@ -32,6 +32,7 @@ int main ()
         printf("Input starting label: ");
         scanf("%s", strStartVertex);
 
+        
         // entire algo here	
         getBaseFileName(strBaseFileName, strInputFileName);
 
@@ -39,8 +40,12 @@ int main ()
         produceOutputFile2 (strBaseFileName, &graph);
         produceOutputFile3 (strBaseFileName, &graph);
         produceOutputFile4 (strBaseFileName, &graph);
-        produceOutputFile5 (strBaseFileName, &graph, strStartVertex);
-        produceOutputFile6 (strBaseFileName, &graph, strStartVertex);
+
+        if (findVertexIdx(&graph, strStartVertex) != -1)
+        {
+            produceOutputFile5 (strBaseFileName, &graph, strStartVertex);
+            produceOutputFile6 (strBaseFileName, &graph, strStartVertex);
+        }
 
         freeAdjList(&graph);
     }
