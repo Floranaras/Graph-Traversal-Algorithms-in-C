@@ -348,7 +348,7 @@ void produceOutputFile1(String50 baseName, graphType *graph)
 		// write e(g)
 
 		sortVertices(graph, nSortedIdx);
-		fprintf(fp, "V(G)={");
+		fprintf(fp, "V(%s)={",baseName);
 
 		for (i = 0; i < graph->nVertices; i++) 
 		{
@@ -360,7 +360,7 @@ void produceOutputFile1(String50 baseName, graphType *graph)
 
 		fprintf(fp, "}\n");
 
-		fprintf(fp, "E(G)={");
+		fprintf(fp, "E(%s)={", baseName);
 
 		for (i = 0; i < graph->nVertices; i++) 
 		{
