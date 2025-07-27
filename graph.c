@@ -23,6 +23,7 @@ void getBaseFileName(String50 baseName, String50 inputName)
 {
 	int j = 0;
 
+	//stop at the point where filename has an extension
 	while (inputName[j] != '.') 
 	{
 		baseName[j] = inputName[j];
@@ -37,7 +38,8 @@ void getBaseFileName(String50 baseName, String50 inputName)
    structure Returns: void
 	@param matrix: Matrix representing the adjacency matrix representation of
    graph data structure
-	@param list: Holds the count for the number of edges per vertice
+	@param list: Holds the count for the number of edges per vertex
+	@param size Number of vertices
 	Post-condition:
 	- Matrix indexes now all initialized to zero
 	- All indexes now initialized to zero
@@ -46,10 +48,11 @@ void initRep(int matrix[][MAX_VERTICES], int *list, int size)
 {
 	int i, j;
 
-	for (i = 0; i < MAX_VERTICES; i++) 
+	//set all values in adjacency list and matrix to 0
+	for (i = 0; i < size; i++) 
 	{
 		list[i] = 0;
-		for (j = 0; j < MAX_VERTICES; j++) 
+		for (j = 0; j < size; j++) 
 		{
 			matrix[i][j] = 0;
 		}
@@ -63,10 +66,13 @@ void initRep(int matrix[][MAX_VERTICES], int *list, int size)
 */
 adjNode *createNode(String50 vertex) 
 {
+	//allocate space for new node
 	adjNode *newNode = (adjNode *)malloc(sizeof(adjNode));
 
+	//if new node was successfully created
 	if (newNode != NULL) 
 	{
+		//change node's vertex to provided vertex
 		strcpy(newNode->vertex, vertex);
 		newNode->next = NULL;
 	}
@@ -90,23 +96,30 @@ void addToAdjList(graphType *graph, int vertexIdx, String50 adjVertex)
 	adjNode *newNode;
 	adjNode *current;
 
+	//create new node
 	newNode = createNode(adjVertex);
 
+	//if new node was created successfully
 	if (newNode != NULL) 
 	{
+		//check if provided position/index on graph is null
+		//if yes, add new node to the position
 		if (graph->adjList[vertexIdx] == NULL)
 			graph->adjList[vertexIdx] = newNode;
 
+		//if no,
 		else 
 		{
 			current = graph->adjList[vertexIdx];
-
+			//look for the next node in the adjacency list that is null
 			while (current->next != NULL)
 				current = current->next;
 
+			//set next node to new node
 			current->next = newNode;
 		}
 
+		//increment amount of edges connected to vertex
 		graph->adjCount[vertexIdx]++;
 	}
 }
@@ -124,10 +137,12 @@ void freeAdjList(graphType *graph)
 	adjNode *current;
 	adjNode *next;
 
+	//loop through all vertices
 	for (i = 0; i < MAX_VERTICES; i++) 
 	{
 		current = graph->adjList[i];
 
+		//free all nodes in adjacency list
 		while (current != NULL) 
 		{
 			next = current->next;
@@ -136,13 +151,15 @@ void freeAdjList(graphType *graph)
 		}
 
 		graph->adjList[i] = NULL;
+		//reset number of edges connected to vertex i to 0
 		graph->adjCount[i] = 0;
 	}
 }
 
 /*
 	Purpose: Searches through the known vertex labels in the graph and return
-   the index of the target label Returns: Index of target label, -1 if not found
+   the index of the target label 
+    Returns: Index of target label, -1 if not found
 	@param graph: Struct for graph data structure
 	@param strVertex: String of target vertex label
 	Pre-condition:
@@ -163,12 +180,12 @@ int findVertexIdx(graphType *graph, String50 strVertex)
 }
 
 /*
-	Purpose: Gets the name of the file without extension from user input and
-   copy into baseName Returns: void
+	Purpose: Creates the adjacency matrix representation of a graph 
+    Returns: void
 	@param graph: Struct for graph data structure
 	Post-condition:
 	- adjMatrix member in graph will now have the complete adjacency matrix
-   representation of the graph data structure
+      representation of the graph data structure
 */
 void makeAdjMatrix(graphType *graph) 
 {
@@ -176,6 +193,7 @@ void makeAdjMatrix(graphType *graph)
 	int nAdjIdx;
 	adjNode *current;
 
+	//initialize all values in adjacency matrix to 0
 	for (i = 0; i < MAX_VERTICES; i++) 
 	{
 		for (j = 0; j < MAX_VERTICES; j++) 
@@ -184,18 +202,24 @@ void makeAdjMatrix(graphType *graph)
 		}
 	}
 
+	//loop through all vertices
 	for (i = 0; i < graph->nVertices; i++) 
 	{
 		current = graph->adjList[i];
+		//loop through all neighbors of a vertex
 		while (current != NULL) 
 		{
+			//find index of vertex's neighbor on adjacency list
 			nAdjIdx = findVertexIdx(graph, current->vertex);
 
+			//if index was found (edge exists between both vertex and neighbor), 
+			//position on matrix is set to 1
 			if (nAdjIdx != -1) 
 			{
 				graph->adjMatrix[i][nAdjIdx] = 1;
 			}
 
+			//move to next neighbor of the vertex
 			current = current->next;
 		}
 	}
@@ -225,14 +249,17 @@ int readInputFile(String50 strInputFileName, graphType *graph)
 	{
 		fscanf(pFile, "%d", &graph->nVertices);
 
+		//initialize adjacency matrix representation
 		initRep(graph->adjMatrix, graph->adjCount, MAX_VERTICES);
 
+		//initialize adjacency list representation
 		for (i = 0; i < MAX_VERTICES; i++) 
 		{
 			graph->adjList[i] = NULL;
 		}
 
 		// Read adjacency info from file
+		// and create adjacency list
 		for (i = 0; i < graph->nVertices; i++) 
 		{
 			fscanf(pFile, "%s", graph->vertices[i]);
@@ -301,11 +328,13 @@ void sortVertices(graphType *graph, int *idx)
 {
 	int i, j;
 
+	//initialize idx array
 	for (i = 0; i < graph->nVertices; i++) 
 	{
 		idx[i] = i;
 	}
 
+	//perform Bubble Sort on idx
 	for (i = 0; i < graph->nVertices - 1; i++) 
 	{
 		for (j = 0; j < graph->nVertices - 1 - i; j++) 
@@ -343,10 +372,9 @@ void produceOutputFile1(String50 baseName, graphType *graph)
 
 	else 
 	{
-		// write v(g)
-		// write e(g)
-
 		sortVertices(graph, nSortedIdx);
+
+		// write vertices of graph
 		fprintf(fp, "V(%s)={",baseName);
 
 		for (i = 0; i < graph->nVertices; i++) 
@@ -359,6 +387,7 @@ void produceOutputFile1(String50 baseName, graphType *graph)
 
 		fprintf(fp, "}\n");
 
+		// write edges of graph
 		fprintf(fp, "E(%s)={", baseName);
 
 		for (i = 0; i < graph->nVertices; i++) 
@@ -401,13 +430,16 @@ int collectAdjacentVertices(adjNode *adjList, String50 adjVertices[])
 	adjCount = 0;
 	current = adjList;
 
+	//look through all neighbors of the vertex
 	while (current != NULL) 
 	{
+		//copy the vertex name of the neighbor into array
 		strcpy(adjVertices[adjCount], current->vertex);
 		adjCount++;
 		current = current->next;
 	}
 
+	//return array
 	return adjCount;
 }
 
@@ -566,6 +598,7 @@ void produceOutputFile4(String50 baseName, graphType *graph)
 
 	fprintf(fp, "%-10s", "");
 
+	//print column vertices of matrix
 	for (i = 0; i < graph->nVertices; i++) 
 	{
 		fprintf(fp, "%-10s", graph->vertices[i]);
@@ -573,11 +606,13 @@ void produceOutputFile4(String50 baseName, graphType *graph)
 
 	fprintf(fp, "\n");
 
+	//print rows of matrix
 	for (i = 0; i < graph->nVertices; i++) 
 	{
-
+		//print row vertex
 		fprintf(fp, "%-10s", graph->vertices[i]);
 
+		//prints 1 if row vertex has an edge with column vertex, 0 otherwise
 		for (int j = 0; j < graph->nVertices; j++) 
 		{
 			fprintf(fp, "%-10d", graph->adjMatrix[i][j]);
@@ -616,24 +651,32 @@ void BFS(graphType *graph, int startingIndex, String50 result[])
 	int candidatesCtr, i;
 	int j, minIdx, temp;
 
+	//initialize visited array, which keeps track of the vertices that were visited
 	for (i = 0; i < graph->nVertices; i++) 
 	{
 		visited[i] = 0;
 	}
 
+	//put starting index in first index of queue
 	queue[tailofQueue] = startingIndex;
 	tailofQueue++;
+	//visit starting index
 	visited[startingIndex] = 1;
 
+	//loop runs until queue is empty
 	while (frontOfQueue < tailofQueue) 
 	{
+		//update tracked vertex
 		currentVertex = queue[frontOfQueue];
 		frontOfQueue++;
 
+		//insert the frontmost, unvisited vertex stored in the queue
 		strcpy(result[resultCtr], graph->vertices[currentVertex]);
 		resultCtr++;
 
+		//reset candidates counter
 		candidatesCtr = 0;
+		//then find candidates (neighbors of current vertex that have not been visited)
 		for (i = 0; i < graph->nVertices; i++) 
 		{
 			if (graph->adjMatrix[currentVertex][i] && !visited[i]) 
@@ -644,6 +687,8 @@ void BFS(graphType *graph, int startingIndex, String50 result[])
 			}
 		}
 
+		//perform Selection Sort on candidates array 
+		//to arrange candidates in alphabetical order
 		for (i = 0; i < candidatesCtr - 1; i++) 
 		{
 			minIdx = i;
@@ -665,6 +710,7 @@ void BFS(graphType *graph, int startingIndex, String50 result[])
 			}
 		}
 
+		//enqueue all candidates and repeat the loop until queue is empty
 		for (i = 0; i < candidatesCtr; i++) 
 		{
 			queue[tailofQueue] = candidates[i];
@@ -701,10 +747,13 @@ void DFS (graphType *graph, int previousIndex, String50 result[],
 	int candidates[MAX_VERTICES];
 	int candidateCtr = 0;
 
+	//visit indicated vertex with index of previousIndex
+	//on first call of DFS, previous index is the starting index
 	visited[previousIndex] = 1;
 	strcpy(result[*resultsCtr], graph->vertices[previousIndex]);
 	(*resultsCtr)++;
 
+	//find candidates (neighbors of recently visited vertex that have not been visited yet)
 	for (i = 0; i < graph->nVertices; i++) 
 	{
 		if (graph->adjMatrix[previousIndex][i] && !visited[i]) 
@@ -714,6 +763,8 @@ void DFS (graphType *graph, int previousIndex, String50 result[],
 		}
 	}
 
+	//perform Selection Sort on candidates array 
+	//to arrange candidates in alphabetical order
 	for (i = 0; i < candidateCtr - 1; i++) 
 	{
 		minIdx = i;
@@ -734,6 +785,7 @@ void DFS (graphType *graph, int previousIndex, String50 result[],
 		}
 	}
 
+	//visit all candidates of recently visited vertex
 	for (i = 0; i < candidateCtr; i++) 
 	{
 		if (!visited[candidates[i]]) 
@@ -767,6 +819,8 @@ void produceOutputFile5(String50 baseName, graphType *graph, String50 start)
 
 	strcpy(outputName, baseName);
 	getOutputFileName(outputName, "-BFS");
+
+	//determine if starting vertex exists on the graph
 	startingIdx = findVertexIdx(graph, start);
 
 	fp = fopen(outputName, "w");
@@ -784,12 +838,15 @@ void produceOutputFile5(String50 baseName, graphType *graph, String50 start)
 
 	else 
 	{
+		//initialize contents of result array to NULL
 		for (i = 0; i < graph->nVertices; i++) {
 			strcpy(result[i], "\0");
 		}
 
+		//perform BFS
 		BFS(graph, startingIdx, result);
 
+		//then print results
 		for (i = 0; i < graph->nVertices; i++) 
 		{
 			if (strlen(result[i]) > 0) 
@@ -833,6 +890,8 @@ void produceOutputFile6(String50 baseName, graphType *graph, String50 start)
 
 	strcpy(outputName, baseName);
 	getOutputFileName(outputName, "-DFS");
+
+	//check if starting vertex exists on graph
 	startingIdx = findVertexIdx(graph, start);
 
 	fp = fopen(outputName, "w");
@@ -844,17 +903,20 @@ void produceOutputFile6(String50 baseName, graphType *graph, String50 start)
 	{
 	printf("Error: Starting vertex not found\n");
 	fclose(fp);
-} 
+	} 
 
 	else 
-{
+	{
+		//initialize visited array
 		for (i = 0; i < MAX_VERTICES; i++) 
 		{
 			nVisited[i] = 0;
 		}
 
+		//perform DFS
 		DFS(graph, startingIdx, result, nVisited, &nResultsCtr);
 
+		//then print results
 		for (i = 0; i < nResultsCtr; i++) 
 		{
 			fprintf(fp, "%s", result[i]);

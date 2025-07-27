@@ -21,9 +21,11 @@ void removeFileExtension(String50 fileName)
 {
 	int i = 0;
 
+	//stop at the point where filename has an extension
 	while (i < strlen(fileName) && fileName[i] != '.')
 		i++;
 
+	//remove the file extension
 	if (i < strlen(fileName))
 		fileName[i] = '\0';
 }
@@ -61,9 +63,12 @@ void sortVerticesAlphabetically(graphType *graph, int *sortedIndices)
 {
 	int i, j, temp;
 
+	//initialize values of sortedIndices array
+	//based on how many vertices exist
 	for (i = 0; i < graph->nVertices; i++)
 		sortedIndices[i] = i;
 
+	//perform Bubble Sort on sortedIndices
 	for (i = 0; i < graph->nVertices - 1; i++) 
 	{
 		for (j = 0; j < graph->nVertices - 1 - i; j++) 
@@ -99,11 +104,14 @@ void writeVerticesStatus(FILE *file, graphType *graphG, graphType *graphH,
 
 	for (i = 0; i < graphH->nVertices; i++) 
 	{
+		//check if vertex in graph H exists on the graph G
 		vertexFound = findVertexIdx(graphG, graphH->vertices[sortedIndices[i]]);
 
+		//if vertex exists on both graphs, print +
 		if (vertexFound != -1)
 			fprintf(file, "%s +\n", graphH->vertices[sortedIndices[i]]);
 
+		//if vertex does not exist on both graphs, print -
 		else
 			fprintf(file, "%s -\n", graphH->vertices[sortedIndices[i]]);
 	}
@@ -127,15 +135,20 @@ char getEdgeStatus(graphType *graphG, graphType *graphH, int idx1, int idx2)
 {
 	int gIndex1, gIndex2;
 
+	//check if both vertices exist on graph H and G
 	gIndex1 = findVertexIdx(graphG, graphH->vertices[idx1]);
 	gIndex2 = findVertexIdx(graphG, graphH->vertices[idx2]);
 
+	//if either or both vertices cannot be found on both graphs, return -
 	if (gIndex1 == -1 || gIndex2 == -1)
 		return '-';
 
+	//if the edge between both vertices does not exist in graph G, return -
 	if (graphG->adjMatrix[gIndex1][gIndex2] != 1)
 		return '-';
 
+	//if both vertices can be found on graphs G and H and
+	//the edge connecting both vertices exist in graph G, return +
 	return '+';
 }
 
@@ -158,16 +171,21 @@ void writeEdgesStatus(FILE *file, graphType *graphG, graphType *graphH,
 	int i, j, idx1, idx2;
 	char status;
 
+	//loop through all vertices in graph H
 	for (i = 0; i < graphH->nVertices; i++) 
 	{
 		for (j = i + 1; j < graphH->nVertices; j++) 
 		{
+			//determine two vertices
 			idx1 = sortedIndices[i];
 			idx2 = sortedIndices[j];
 
+			//if edge exists on graph H
 			if (graphH->adjMatrix[idx1][idx2] == 1) 
 			{
+				//check if edge also exists on graph G
 				status = getEdgeStatus(graphG, graphH, idx1, idx2);
+				//then print the corresponding status
 				fprintf(file, "(%s,%s) %c\n", graphH->vertices[idx1],
 			graphH->vertices[idx2], status);
 			}
@@ -193,8 +211,10 @@ int findVertex(graphType *pGraphG, char *vertexName)
 	int j;
 	int nVertexFound = 0;
 
+	//loop through vertices in graph G
 	for (j = 0; j < pGraphG->nVertices && nVertexFound == 0; j++) 
 	{
+		//if found, stop the loop and return 1
 		if (strcmp(vertexName, pGraphG->vertices[j]) == 0)
 			nVertexFound = 1;
 	}
@@ -218,8 +238,11 @@ int allVerticesExist(graphType *pGraphG, graphType *pGraphH)
 	int i;
 	int allFound = 1;
 
+	//loop through all vertices in graph H
 	for (i = 0; i < pGraphH->nVertices && allFound; i++) 
 	{
+		//if vertex in graph H cannot be found in graph G
+		//stop the loop and return 0
 		if (!findVertex(pGraphG, pGraphH->vertices[i]))
 			allFound = 0;
 	}
@@ -246,17 +269,22 @@ int checkEdgeExists(graphType *pGraphG, graphType *pGraphH, int nHIndex1,
 {
 	int nGIndex1, nGIndex2;
 
+	//if edge does not exist in graph H, return 1
 	if (pGraphH->adjMatrix[nHIndex1][nHIndex2] != 1)
 		return 1;
 
+	//find indices of the two given vertices
 	nGIndex1 = findVertexIdx(pGraphG, pGraphH->vertices[nHIndex1]);
 	nGIndex2 = findVertexIdx(pGraphG, pGraphH->vertices[nHIndex2]);
 
+	// if either of the two vertices don't exist on graph G, return 0
 	if (nGIndex1 == -1 || nGIndex2 == -1)
 		return 0;
+	//if edge between two vertices doesn't exist in graph G, return 0
 	if (pGraphG->adjMatrix[nGIndex1][nGIndex2] == 0)
 		return 0;
 
+	//if edge exists in graphs H and G, return 1
 	return 1;
 }
 
@@ -276,12 +304,17 @@ int allEdgesExist(graphType *pGraphG, graphType *pGraphH)
 	int nHIndex1, nHIndex2;
 	int allExist = 1;
 
+	//loop through all vertices in graph H
 	for (nHIndex1 = 0; nHIndex1 < pGraphH->nVertices && allExist; nHIndex1++) 
 	{
+		//loop through all vertices in graph H
 		for (nHIndex2 = 0; nHIndex2 < pGraphH->nVertices && allExist; nHIndex2++) 
 		{
+			//if an edge exists between both vertices in graph H
 			if (pGraphH->adjMatrix[nHIndex1][nHIndex2] == 1) 
 			{
+				//check if the edge also exists in graph G
+				//if it doesn't exist, stop the loop and return 0
 				if (!checkEdgeExists(pGraphG, pGraphH, nHIndex1, nHIndex2))
 					allExist = 0;
 			}
@@ -306,13 +339,18 @@ void checkIsSubgraph(graphType *pGraphG, graphType *pGraphH, int *pIsSubgraph)
 {
 	int nAllVerticesFound, nAllEdgesFound;
 
+	//check if all vertices on graph H exist on graph G
 	nAllVerticesFound = allVerticesExist(pGraphG, pGraphH);
 
+	//if all vertices exist on graphs H and G, check if the edges on H also exist on G
+	//if some or all vertices on graph H don't exist on graph G, 
+	//some or all edges on H cannot be found on G
 	if (nAllVerticesFound == 1)
 		nAllEdgesFound = allEdgesExist(pGraphG, pGraphH);
 	else
 		nAllEdgesFound = 0;
 
+	//if all vertices and edges in graph H exist on graph G, H is a subgraph of G
 	if (nAllVerticesFound == 1 && nAllEdgesFound == 1)
 		*pIsSubgraph = 1;
 	else
@@ -373,6 +411,7 @@ void produceSubgraphOutput(String50 strFileG, String50 strFileH,
 
 	if (pFile != NULL) 
 	{
+		//write output file
 		sortVerticesAlphabetically(pGraphH, nSortedIndices);
 		writeVerticesStatus(pFile, pGraphG, pGraphH, nSortedIndices);
 		writeEdgesStatus(pFile, pGraphG, pGraphH, nSortedIndices);
@@ -401,6 +440,7 @@ int readBothGraphFiles(String50 strFileG, String50 strFileH, graphType *graphG,
 {
 	int nFileSuccessG, nFileSuccessH;
 
+	//if either or both files cannot be read, return 0
 	nFileSuccessG = readInputFile(strFileG, graphG);
 
 	if (!nFileSuccessG) 
@@ -456,6 +496,7 @@ int main()
 	{
 		produceSubgraphOutput(strFileG, strFileH, &graphG, &graphH);
 
+		//remove all nodes on adjacency list of graphs H and G
 		freeAdjList(&graphG);
 		freeAdjList(&graphH);
 	}
